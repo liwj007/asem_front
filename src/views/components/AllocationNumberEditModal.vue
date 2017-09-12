@@ -14,7 +14,8 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="预留名额" prop="restNumber">
-                    <el-input-number v-model="detail.restNumber" :min="0" @change="changeNumber"></el-input-number>
+                    <el-input-number v-model="detail.restNumber" :min="0" :max="detail.number"
+                                     @change="changeNumber"></el-input-number>
                 </el-form-item>
                 <el-form-item label="分配规则">
                     <el-radio-group v-model="detail.allocationRule" @change="changeNumber">
@@ -29,9 +30,10 @@
                 </el-table-column>
                 <el-table-column prop="unitName" label="学院">
                 </el-table-column>
-                <el-table-column prop="number" label="已分配名额">
+                <el-table-column prop="number" label="分配名额(候选)">
                     <template scope="scope">
-                        <el-input-number size="small" v-model="scope.row.number" :step="1" :min="0">
+                        <el-input-number size="small" v-model="scope.row.number" :step="1" :min="0"
+                                         :max="scope.row.max">
                         </el-input-number>
                     </template>
                 </el-table-column>

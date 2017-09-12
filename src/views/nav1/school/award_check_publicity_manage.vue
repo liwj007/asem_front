@@ -13,8 +13,8 @@
             </el-form-item>
             <el-form-item label="公示范围">
                 <el-radio-group v-model="form.scale">
-                    <el-radio label="school" :disabled="true">学校公示</el-radio>
-                    <el-radio label="college">学院公示</el-radio>
+                    <el-radio label="school" >学校公示</el-radio>
+                    <el-radio label="college" :disabled="true">学院公示</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="公示字段"  prop="fields">
@@ -49,8 +49,8 @@
 
 <script>
     import {
-        getCollegePublicityScholarshipList,
-        collegePublicity
+        getSchoolPublicityScholarshipList,
+        schoolPublicity
     } from '../../../api/api';
     import moment from 'moment'
     import {mapGetters} from 'vuex'
@@ -87,7 +87,7 @@
                     time: '',
                     awards: [],
                     fields: ['scholarshipName', 'prizeName', 'sn', 'name', 'classes', 'grade', 'major', 'college'],
-                    scale: 'college'
+                    scale: 'school'
                 },
                 scholarships: []
             }
@@ -109,15 +109,14 @@
                             major: this.form.fields.indexOf('major')!==-1,
                             college: this.form.fields.indexOf('college')!==-1,
                             prizeNumber: this.form.fields.indexOf('prizeNumber')!==-1,
-                            files: this.form.fields.indexOf('files')!==-1,
-                            unitId: this.getManageUnit
+                            files: this.form.fields.indexOf('files')!==-1
                         }
-                        collegePublicity(para).then((res) => {
+                        schoolPublicity(para).then((res) => {
                             this.$message({
                                 message: '提交成功',
                                 type: 'success'
                             });
-                            this.$router.push('/scholarship/check/award')
+                            this.$router.push('/school/check/award')
                         }).catch((error) => {
                         });
                     } else {
@@ -129,7 +128,7 @@
                 let para = {
                     manageUnit: this.getManageUnit
                 };
-                getCollegePublicityScholarshipList(para).then((res) => {
+                getSchoolPublicityScholarshipList(para).then((res) => {
                     this.scholarships = res;
                     for (let index in this.scholarships) {
                         this.form.awards.push(this.scholarships[index].id)

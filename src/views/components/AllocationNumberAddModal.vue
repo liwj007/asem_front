@@ -54,7 +54,7 @@
                         <el-table-column prop="unitName" label="年级"
                                          v-else-if="allocationMethod === 'GRADE'">
                         </el-table-column>
-                        <el-table-column prop="number" label="已分配名额">
+                        <el-table-column prop="number" label="分配名额(候选)">
                             <template scope="scope">
                                 <el-input-number size="small" v-model="scope.row.number" :step="1" :min="0"
                                                  :max="scope.row.max"></el-input-number>

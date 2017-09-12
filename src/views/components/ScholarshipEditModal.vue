@@ -45,8 +45,10 @@
                 <div v-if="editForm.levelType === 'MULTI'">
                     <el-form-item v-for="(item, index) in editForm.prizes" :key="index" style="padding-bottom: 5px;">
                         <el-input v-model="item.prizeName" style="width: 100px;" :readonly="true"></el-input>
-                        <el-input v-model.number="item.money" style="width: 200px;" placeholder="请输入金额"></el-input>
-                        <el-input v-model.number="item.number" style="width: 200px;" placeholder="请输入人数"></el-input>
+                        奖励金额：<el-input-number v-model.number="item.money" style="width: 200px;"
+                                              :min="1" :max="100000" @blur="check"></el-input-number>元
+                        奖励人数：<el-input-number v-model.number="item.number" style="width: 200px;"
+                                              :min="1" :max="100" @blur="check"></el-input-number>人
                         <el-button @click.prevent="removeLevelItemEdit(item)"
                                    v-show="index === editForm.prizes.length-1">
                             删除
@@ -58,8 +60,10 @@
                     </el-form-item>
                 </div>
                 <div v-else>
-                    <el-input v-model="editForm.avgMoney" style="width: 200px;" placeholder="请输入金额"></el-input>
-                    <el-input v-model="editForm.avgNumber" style="width: 200px;" placeholder="请输入人数"></el-input>
+                    奖励金额：<el-input-number v-model="editForm.avgMoney" style="width: 200px;"
+                                          :min="100" :max="100000" @blur="check"></el-input-number>元
+                    奖励人数：<el-input-number v-model="editForm.avgNumber" style="width: 200px;"
+                                          :min="1" :max="100" @blur="check"></el-input-number>人
                 </div>
             </el-form-item>
 
@@ -158,7 +162,10 @@
                 }
                 return str;
             },
-
+            check: function () {
+                this.$refs['editScholarshipForm'].validate((valid) => {
+                });
+            },
             deleteFile: function (index) {
                 this.editForm.files.splice(index, 1)
             },

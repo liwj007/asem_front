@@ -43,7 +43,7 @@
 
         <el-dialog title="提出异议" v-model="formVisible" @close="closeModal" size="tiny">
             <el-form :model="addForm" label-width="100px" ref="addForm">
-                <el-form-item label="分配奖项" prop="prizes">
+                <el-form-item label="相关奖项" prop="prizes">
                     <el-select v-model="addForm.publicityId" placeholder="请选择" style=" width: 100%;">
                         <el-option
                                 v-for="item in publicityList"
@@ -54,14 +54,14 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="综合评测" prop="name">
-                    <el-input v-model="addForm.content" type="textarea" :rows="5"></el-input>
+                <el-form-item label="异议内容" prop="name">
+                    <el-input v-model="addForm.content" type="textarea" :maxlength="200" placeholder="200字以内" :rows="5"></el-input>
                 </el-form-item>
 
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelAdd">取消</el-button>
-                <el-button type="primary" @click="addSubmit" :loading="addLoading">提交</el-button>
+                <el-button type="primary" @click="addSubmit" :loading="addLoading" :disabled="!addForm.publicityId || !addForm.content ">提交</el-button>
             </div>
         </el-dialog>
     </section>

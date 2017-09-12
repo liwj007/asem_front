@@ -134,6 +134,13 @@
                 tmp = this.addForm.collegeEndTime.split(':')
                 collegeEnd.hour(tmp[0])
                 collegeEnd.minute(tmp[1])
+                if (studentStart>collegeEnd){
+                    this.$message({
+                        message: '学生开始时间不能晚于学院截止时间',
+                        type: 'error'
+                    });
+                    return
+                }
                 let para = {
                     scholarshipId: this.addForm.scholarshipId,
                     studentStartDate: studentStart.format('YYYY-MM-DD HH:mm:00'),

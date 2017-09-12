@@ -171,7 +171,14 @@
                     });
                     this.addFormVisible = false
                     this.addLoading = false
-                    this.getDatas();
+                    getYearSelections().then((res) => {
+                        this.years = res;
+                        if (this.years.length>0) {
+                            this.filters.year = this.years[0].id
+                            this.getDatas()
+                        }
+                    }).catch((error)=>{
+                    });
                 }).catch((error)=>{
                     this.addLoading = false
                 });

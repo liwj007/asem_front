@@ -1,19 +1,9 @@
 <template>
     <section>
-
         <!--工具条-->
-        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-            <el-form :inline="true" :model="filters">
-                <el-form-item>
-                    <el-button type="text" icon="arrow-left" @click.native="$router.go(-1)">返回 </el-button>
-                </el-form-item>
-                <!--<el-form-item>-->
-                    <!--<el-select v-model="filters.college" style="width: 120px;">-->
-                        <!--<el-option label="不限学院" value="0"></el-option>-->
-                        <!--<el-option label="学院1" value="1"></el-option>-->
-                        <!--<el-option label="学院2" value="2"></el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
+        <!--<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">-->
+            <!--<el-form :inline="true" :model="filters">-->
+
                 <!--<el-form-item>-->
                     <!--<el-select v-model="filters.major" style="width: 120px;">-->
                         <!--<el-option label="不限专业" value="0"></el-option>-->
@@ -37,18 +27,18 @@
                 <!--</el-form-item>-->
                 <!--<el-form-item>-->
                     <!--<el-select v-model="filters.submitStatus" style="width: 120px;">-->
-                        <!--<el-option label="不限提交" value="0"></el-option>-->
-                        <!--<el-option label="已提交" value="1"></el-option>-->
-                        <!--<el-option label="需修改" value="2"></el-option>-->
-                        <!--<el-option label="重新提交" value="3"></el-option>-->
+                        <!--<el-option label="不限奖学金" value="0"></el-option>-->
+                        <!--<el-option label="xxx" value="1"></el-option>-->
+                        <!--<el-option label="xxx" value="2"></el-option>-->
+                        <!--<el-option label="xxxx" value="3"></el-option>-->
                     <!--</el-select>-->
                 <!--</el-form-item>-->
                 <!--<el-form-item>-->
-                    <!--<el-select v-model="filters.checkStatus" style="width: 120px;">-->
-                        <!--<el-option label="不限审核" value="0"></el-option>-->
-                        <!--<el-option label="审核中" value="1"></el-option>-->
-                        <!--<el-option label="审核通过" value="2"></el-option>-->
-                        <!--<el-option label="审核不通过" value="3"></el-option>-->
+                    <!--<el-select v-model="filters.checkStatus" style="width: 150px;">-->
+                        <!--<el-option label="不限奖学金等级" value="0"></el-option>-->
+                        <!--<el-option label="1" value="1"></el-option>-->
+                        <!--<el-option label="2" value="2"></el-option>-->
+                        <!--<el-option label="3" value="3"></el-option>-->
                     <!--</el-select>-->
                 <!--</el-form-item>-->
                 <!--<el-form-item>-->
@@ -57,13 +47,15 @@
                 <!--<el-form-item>-->
                     <!--<el-button type="primary" v-on:click="">查询</el-button>-->
                 <!--</el-form-item>-->
-            </el-form>
-        </el-col>
+            <!--</el-form>-->
+        <!--</el-col>-->
 
-        <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%" @selection-change="selsChange">
-            <el-table-column type="selection" width="50" :selectable="canSelect">
-            </el-table-column>
+        <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%" >
             <el-table-column type="index" width="60">
+            </el-table-column>
+            <el-table-column prop="scholarshipName" label="奖学金名称">
+            </el-table-column>
+            <el-table-column prop="prizeName" label="等级">
             </el-table-column>
             <el-table-column prop="name" label="姓名">
             </el-table-column>
@@ -75,34 +67,29 @@
             </el-table-column>
             <el-table-column prop="className" label="班级">
             </el-table-column>
-            <el-table-column prop="status" label="材料提交状态">
+            <el-table-column prop="records" label="获奖数">
                 <template scope="scope">
-                    <span v-if="scope.row.status === 'SUBMIT'">已提交</span>
-                    <span v-else-if="scope.row.status === 'PASS'">已提交</span>
-                    <span v-else-if="scope.row.status === 'REJECT'">需修改</span>
-                    <span v-else-if="scope.row.status === 'RESUBMIT'">重新提交</span>
+                    <el-popover trigger="hover" placement="top">
+                        <p v-for="item in scope.row.records">
+                            {{item}}
+                        </p>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag>{{ scope.row.records.length }}</el-tag>
+                        </div>
+                    </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column prop="prizeId" label="申请材料">
+            <el-table-column prop="documents" label="申请材料">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="showDetail(scope.row.applicationId)">查看</el-button>
-                </template>
-            </el-table-column>
-            <el-table-column label="材料审核状态">
-                <template scope="scope">
-                    <span v-if="scope.row.status === 'SUBMIT'">审核中</span>
-                    <span v-else-if="scope.row.status === 'PASS'">审核通过</span>
-                    <span v-else-if="scope.row.status === 'REJECT'">审核不通过</span>
-                    <span v-else-if="scope.row.status === 'RESUBMIT'">审核中</span>
                 </template>
             </el-table-column>
         </el-table>
 
         <!--工具条-->
         <el-col :span="24" class="toolbar">
-            <el-button type="primary" @click="checkFileStatus('PASS')" :disabled="this.sels.length===0">批量通过</el-button>
-            <el-button type="danger" @click="checkFileStatus('REJECT')" :disabled="this.sels.length===0">批量不通过
-            </el-button>
+            <el-button type="primary" @click="$router.push('/school/check/award/publicity_manage')" :disabled="tableData.length===0">下一步</el-button>
+
 
             <el-pagination
                     @size-change="handleSizeChange"
@@ -118,22 +105,24 @@
         <ApplicationInfoModal :infoVisible="infoVisible" :id="applicationId"
                               @close="closeInfoModal">
         </ApplicationInfoModal>
-
-
     </section>
 </template>
 
 <script>
     import {
-        getFileCheckDetailList,
-        checkFileStatus
+        getSchoolPublicityList
     } from '../../../api/api';
+    import {mapGetters} from 'vuex'
     import ApplicationInfoModal from '../../components/ApplicationInfoModal.vue'
 
     export default {
-        name: 'FileCheckDetail',
-        props: ['itemId'],
+        name: 'AwardCheckPublicity',
         components: {ApplicationInfoModal},
+        computed: {
+            ...mapGetters([
+                'getManageUnit'
+            ])
+        },
         data() {
             return {
                 infoVisible: false,
@@ -147,7 +136,6 @@
                     submitStatus: '0',
                     checkStatus: '0'
                 },
-                sels: [],
                 currentPage: 1,
                 currentPageSize: 10,
                 tableData: [],
@@ -156,66 +144,46 @@
             }
         },
         methods: {
-            canSelect: function (row,index) {
-                return row.status === 'SUBMIT' || row.status === 'RESUBMIT'
-            },
-            checkFileStatus: function (result) {
-                let ids = []
-                for (let index in this.sels){
-                    let item = this.sels[index]
-                    ids.push(item.applicationId)
-                }
-                let para = {
-                    ids: ids,
-                    result: result
-                };
-                checkFileStatus(para).then((res) => {
-                    this.getDatas()
-                }).catch((error) => {
-                });
-            },
-            closeInfoModal: function () {
-                this.infoVisible = false
-            },
-            selsChange: function (sels) {
-                this.sels = sels;
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val;
-                this.getDatas();
-            },
-            handleSizeChange(val) {
-                this.currentPageSize = val
-                this.getDatas();
-            },
             showDetail: function (id) {
                 this.applicationId = id
                 this.infoVisible = true
             },
+            closeInfoModal: function () {
+                this.infoVisible = false
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.getDatas()
+            },
+            handleSizeChange(val) {
+                this.currentPageSize = val
+                this.getDatas()
+            },
             getDatas: function (val) {
                 let para = {
                     pageNum: this.currentPage,
-                    pageSize: this.currentPageSize,
-                    prizeId: this.$route.params.id
+                    pageSize: this.currentPageSize
                 };
                 this.listLoading = true;
-                getFileCheckDetailList(para).then((res) => {
+                getSchoolPublicityList(para).then((res) => {
                     this.total = res.total;
                     this.tableData = res.list;
                     this.listLoading = false;
-                }).catch((error) => {
+                }).catch((error)=>{
                     this.listLoading = false;
                 });
             }
+
         },
+
         mounted() {
-            this.getDatas();
+            this.getDatas()
         }
     }
 
 </script>
 
 <style scoped lang="scss">
-
+    @import '~scss_vars';
 
 </style>

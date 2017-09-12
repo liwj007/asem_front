@@ -10,7 +10,7 @@
                     <!--<el-button type="primary" v-on:click="">查询</el-button>-->
                 <!--</el-form-item>-->
                 <el-form-item>
-                    <el-button type="primary" @click="$router.push('/check/award/publicity')">提交公示</el-button>
+                    <el-button type="primary" @click="$router.push('/school/check/award/publicity')">提交公示</el-button>
                 </el-form-item>
             </el-form>
         </el-col>

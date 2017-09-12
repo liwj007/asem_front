@@ -151,6 +151,13 @@
                 tmp = this.addForm.collegeEndTime.split(':')
                 collegeEnd.hour(tmp[0])
                 collegeEnd.minute(tmp[1])
+                if (studentStart>collegeEnd){
+                    this.$message({
+                        message: '学生开始时间不能晚于学院截止时间',
+                        type: 'error'
+                    });
+                    return
+                }
                 let list = []
                 for (let index in this.addForm.prizes) {
                     list.push({

@@ -253,6 +253,13 @@
                 tmp = this.addForm.studentEndTime.split(':')
                 studentEnd.hour(tmp[0])
                 studentEnd.minute(tmp[1])
+                if (studentStart>studentEnd){
+                    this.$message({
+                        message: '学生开始时间不能晚于学生截止时间',
+                        type: 'error'
+                    });
+                    return
+                }
                 let gradeEnd =null
                 if (this.needGrade && this.addForm.gradeEndDate !== undefined
                     && this.addForm.gradeEndDate !== ''){
@@ -260,6 +267,21 @@
                     tmp = this.addForm.gradeEndTime.split(':')
                     gradeEnd.hour(tmp[0])
                     gradeEnd.minute(tmp[1])
+                    if (studentEnd>gradeEnd){
+                        this.$message({
+                            message: '学生截止时间不能晚于年级截止时间',
+                            type: 'error'
+                        });
+                        return
+                    }
+
+                    if (studentStart>gradeEnd){
+                        this.$message({
+                            message: '学生开始时间不能晚于年级截止时间',
+                            type: 'error'
+                        });
+                        return
+                    }
                 }
 
 

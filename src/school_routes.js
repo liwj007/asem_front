@@ -12,15 +12,17 @@ import FileCheckDetail from './views/nav1/school/file_check_detail'
 import AwardCheck from './views/nav1/school/award_check'
 import AwardCheckDetail from './views/nav1/school/award_check_detail'
 import AwardCheckCollegeList from './views/nav1/school/award_check_college_list'
-import AwardCheckPublicity from './views/nav1/award_check_publicity'
-import AwardCheckPublicityManage from './views/nav1/award_check_publicity_manage'
+
 
 import QuotaAllocation from './views/nav2/school/quota_allocation'
 import QuotaApply from './views/nav2/school/quota_apply'
 import QuotaBack from './views/nav2/school/quota_back'
 
-
-import Publicity from './views/nav1/publicity.vue'
+import PublicityScholarshipList from './views/nav1/school/publicity_scholarship_list.vue'
+import PublicityObjection from  './views/nav1/school/publicity_objection.vue'
+import AwardCheckPublicity from './views/nav1/school/award_check_publicity'
+import AwardCheckPublicityManage from './views/nav1/school/award_check_publicity_manage'
+import Publicity from './views/nav1/school/publicity.vue'
 
 
 
@@ -34,10 +36,12 @@ export default [
             {path: 'application_check', name: '奖学金审核', redirect: {path: 'check/file'}, right: []},
             {path: 'check/file/detail/:id', component: FileCheckDetail, name: '材料审核明细', hidden: true},
             {path: 'check/file', component: FileCheck, name: '材料审核', hidden: true},
-            {path: 'publicity', component: Publicity, name: '奖学金公示', right: []},
+            {path: 'publicity_list', component: PublicityScholarshipList, name: '奖学金公示', right: []},
             {path: 'check/award', component: AwardCheck, name: '获奖审核', hidden: true},
+            {path: 'publicity_detail/:id', component: Publicity, name: '奖学金公示名单', hidden: true},
             {path: 'check/award/publicity', component: AwardCheckPublicity, name: '公示名单确认', hidden: true},
             {path: 'check/award/publicity_manage', component: AwardCheckPublicityManage, name: '公示范围确认', hidden: true},
+            {path: 'publicity_objection', component: PublicityObjection, name: '异议反馈', hidden: true},
             {path: 'check/award/college_list/:id', component: AwardCheckCollegeList, name: '获奖审核学院列表', hidden: true},
             {path: 'check/award/detail/:id', component: AwardCheckDetail, name: '获奖审核明细', hidden: true}
         ]

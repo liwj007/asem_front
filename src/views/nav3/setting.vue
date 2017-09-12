@@ -59,7 +59,7 @@
                 <el-row type="flex" class="row-bg" justify="center">
                     <el-col :span="18">
                         <div v-if="active === 0">
-                            <el-form ref="form" :model="newForm" label-width="140px">
+                            <el-form ref="form1" :model="newForm" label-width="140px" :rules="addFormRules">
                                 <el-form-item label="选择类型：" prop="type">
                                     <el-radio-group v-model="newForm.type">
                                         <el-radio label="SCHOOL">校级及以上</el-radio>
@@ -67,12 +67,12 @@
                                     </el-radio-group>
                                 </el-form-item>
                                 <el-form-item label="模板名称：" prop="name">
-                                    <el-input v-model="newForm.name"></el-input>
+                                    <el-input v-model="newForm.name" :maxlength="20" placeholder="20字以内"></el-input>
                                 </el-form-item>
                             </el-form>
                         </div>
                         <div v-else-if="active === 1">
-                            <el-form ref="form" :model="newForm" label-width="140px">
+                            <el-form ref="form2" :model="newForm" label-width="140px">
                                 <el-form-item label="需要年级审核环节：" prop="needGradeCheck">
                                     <el-radio-group v-model="newForm.needGradeCheck" @change="changeGradePoint">
                                         <el-radio :label="true">是</el-radio>
@@ -89,7 +89,7 @@
                             </el-form>
                         </div>
                         <div v-else-if="active === 2">
-                            <el-form ref="form" :model="newForm" label-width="140px">
+                            <el-form ref="form3" :model="newForm" label-width="140px">
                                 <el-form-item label="该环节审核人员：" prop="specialInstructor">
                                     <el-checkbox v-model="newForm.specialInstructor" disabled>专项辅导员</el-checkbox>
                                     <br/>
@@ -165,6 +165,11 @@
     export default {
         data() {
             return {
+                addFormRules: {
+                    name: [
+                        {required: true, message: '请输入模板名称', trigger: 'blur'}
+                    ]
+                },
                 detailForm: {
 
                 },
@@ -230,7 +235,19 @@
                 })
             },
             next: function () {
-                if (this.active <= 2) this.active++;
+                if (this.active <= 2) {
+                    if (this.active === 0){
+                        this.$refs['form1'].validate((valid) => {
+                            if (valid) {
+                                this.active++
+                            } else {
+                                return false
+                            }
+                        })
+                    }else {
+                        this.active++
+                    }
+                };
             },
             before: function () {
                 if (this.active > 0) this.active--;

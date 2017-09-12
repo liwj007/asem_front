@@ -6,7 +6,7 @@
             <el-form-item label="奖学金名称(30字以内)" prop="name">
                 <el-input v-model="addForm.name" auto-complete="off" :maxlength="30"></el-input>
             </el-form-item>
-            <el-form-item label="奖学金类型" prop="templateId">
+            <el-form-item label="奖学金模板" prop="templateId">
                 <el-select v-model="addForm.templateId" placeholder="请选择奖学金类型模板">
                     <el-option v-for="item in scholarTemplates" :key="item.id" :label="item.name"
                                :value="item.id"></el-option>
@@ -37,8 +37,10 @@
                 <div v-if="addForm.levelType === 'MULTI'">
                     <el-form-item v-for="(item, index) in addForm.prizes" :key="index" style="padding-bottom: 5px;">
                         <el-input v-model="item.prizeName" style="width: 100px;" :readonly="true"></el-input>
-                        <el-input v-model.number="item.money" style="width: 200px;" placeholder="请输入金额"></el-input>
-                        <el-input v-model.number="item.number" style="width: 200px;" placeholder="请输入人数"></el-input>
+                        奖励金额：<el-input-number v-model.number="item.money" style="width: 200px;"
+                                  :min="100" :max="100000" @blur="check"></el-input-number>元
+                        奖励人数：<el-input-number v-model.number="item.number" style="width: 200px;"
+                                 :min="1" :max="100" @blur="check"></el-input-number>人
                         <el-button @click.prevent="removeLevelItem(item)" v-show="index === addForm.prizes.length-1">
                             删除
                         </el-button>
@@ -49,8 +51,10 @@
                     </el-form-item>
                 </div>
                 <div v-else>
-                    <el-input v-model="addForm.avgMoney" style="width: 200px;" placeholder="请输入金额"></el-input>
-                    <el-input v-model="addForm.avgNumber" style="width: 200px;" placeholder="请输入人数"></el-input>
+                    奖励金额：<el-input-number v-model="addForm.avgMoney" style="width: 200px;"
+                                          :min="100" :max="100000" @blur="check"></el-input-number>元
+                    奖励人数：<el-input-number v-model="addForm.avgNumber" style="width: 200px;"
+                                          :min="1" :max="100" @blur="check"></el-input-number>人
                 </div>
             </el-form-item>
 
@@ -93,16 +97,16 @@
             var checkPrizes = (rule, value, callback) => {
                 if (this.addForm.levelType === 'AVG') {
                     if (!this.addForm.avgMoney || !this.addForm.avgNumber) {
-                        return callback(new Error('请输入奖学金金额和名额数量1'));
+                        return callback(new Error('请输入奖学金金额和名额数量'));
                     }
                 } else if (this.addForm.levelType === 'MULTI') {
                     if (this.addForm.prizes.length == 0) {
-                        return callback(new Error('请输入奖学金金额和名额数量2'));
+                        return callback(new Error('请输入奖学金金额和名额数量'));
                     } else {
                         for (let index in this.addForm.prizes) {
                             let item = this.addForm.prizes[index]
                             if (!item.money || !item.number) {
-                                return callback(new Error('请输入奖学金金额和名额数量3'));
+                                return callback(new Error('请输入奖学金金额和名额数量'));
                             }
                         }
                     }
@@ -161,7 +165,10 @@
                 }).catch((error) => {
                 });
             },
-
+            check: function () {
+                this.$refs['addScholarshipForm'].validate((valid) => {
+                });
+            },
             //新增
             addSubmit: function () {
                 this.$refs['addScholarshipForm'].validate((valid) => {

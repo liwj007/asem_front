@@ -6,50 +6,50 @@
                 <el-form-item>
                     <el-button type="text" icon="arrow-left" @click="$router.go(-1)">返回 </el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-select v-model="filters.major" style="width: 120px;">
-                        <el-option label="不限专业" value="0"></el-option>
-                        <el-option label="专业1" value="1"></el-option>
-                        <el-option label="专业2" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-select v-model="filters.grade" style="width: 120px;">
-                        <el-option label="不限年级" value="0"></el-option>
-                        <el-option label="年级1" value="1"></el-option>
-                        <el-option label="年级2" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-select v-model="filters.className" style="width: 120px;">
-                        <el-option label="不限班级" value="0"></el-option>
-                        <el-option label="班级1" value="1"></el-option>
-                        <el-option label="班级2" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-select v-model="filters.submitStatus" style="width: 120px;">
-                        <el-option label="不限提交" value="0"></el-option>
-                        <el-option label="已提交" value="1"></el-option>
-                        <el-option label="需修改" value="2"></el-option>
-                        <el-option label="重新提交" value="3"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-select v-model="filters.checkStatus" style="width: 120px;">
-                        <el-option label="不限审核" value="0"></el-option>
-                        <el-option label="审核中" value="1"></el-option>
-                        <el-option label="审核通过" value="2"></el-option>
-                        <el-option label="审核不通过" value="3"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-input v-model="filters.name" placeholder="学号或姓名"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="text" v-on:click="dialogFormVisible=true">高级设置</el-button>
-                    <el-button type="primary" v-on:click="">查询</el-button>
-                </el-form-item>
+                <!--<el-form-item>-->
+                    <!--<el-select v-model="filters.major" style="width: 120px;">-->
+                        <!--<el-option label="不限专业" value="0"></el-option>-->
+                        <!--<el-option label="专业1" value="1"></el-option>-->
+                        <!--<el-option label="专业2" value="2"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-select v-model="filters.grade" style="width: 120px;">-->
+                        <!--<el-option label="不限年级" value="0"></el-option>-->
+                        <!--<el-option label="年级1" value="1"></el-option>-->
+                        <!--<el-option label="年级2" value="2"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-select v-model="filters.className" style="width: 120px;">-->
+                        <!--<el-option label="不限班级" value="0"></el-option>-->
+                        <!--<el-option label="班级1" value="1"></el-option>-->
+                        <!--<el-option label="班级2" value="2"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-select v-model="filters.submitStatus" style="width: 120px;">-->
+                        <!--<el-option label="不限提交" value="0"></el-option>-->
+                        <!--<el-option label="已提交" value="1"></el-option>-->
+                        <!--<el-option label="需修改" value="2"></el-option>-->
+                        <!--<el-option label="重新提交" value="3"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-select v-model="filters.checkStatus" style="width: 120px;">-->
+                        <!--<el-option label="不限审核" value="0"></el-option>-->
+                        <!--<el-option label="审核中" value="1"></el-option>-->
+                        <!--<el-option label="审核通过" value="2"></el-option>-->
+                        <!--<el-option label="审核不通过" value="3"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-input v-model="filters.name" placeholder="学号或姓名"></el-input>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-button type="text" v-on:click="dialogFormVisible=true">高级设置</el-button>-->
+                    <!--<el-button type="primary" v-on:click="">查询</el-button>-->
+                <!--</el-form-item>-->
             </el-form>
         </el-col>
 
@@ -108,7 +108,7 @@
         <el-col :span="24" class="toolbar">
             <el-button type="primary" @click="checkPrizeStatus('PASS')" :disabled="this.sels.length===0">批量通过</el-button>
             <el-button type="danger" @click="checkPrizeStatus('REJECT')" :disabled="this.sels.length===0">批量不通过</el-button>
-            <span>申请人数 200，可用名额 200，已用名额 0</span>
+            <!--<span>申请人数 200，可用名额 200，已用名额 0</span>-->
             <el-pagination
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"

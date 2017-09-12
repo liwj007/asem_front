@@ -55,7 +55,7 @@
 
 <script>
     import {
-        getCollegeObjections,
+        getSchoolObjections,
         feedbackObjection
     } from '../../../api/api';
     import {mapGetters} from 'vuex'
@@ -135,7 +135,7 @@
                     manageUnit: this.getManageUnit
                 };
                 this.listLoading = true;
-                getCollegeObjections(para).then((res) => {
+                getSchoolObjections(para).then((res) => {
                     this.total = res.total;
                     this.tableData = res.list;
                     this.listLoading = false;

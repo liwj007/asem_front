@@ -282,16 +282,28 @@ export const getCollegePublicityList = params => {
     return axios.get(`applications/college_publicity_list`, {params: params}).then(res => res.data);
 };
 
+export const getSchoolPublicityList = params => {
+    return axios.get(`applications/school_publicity_list`, {params: params}).then(res => res.data);
+};
+
 export const getCollegePublicityScholarshipList = params => {
     return axios.get(`applications/college_publicity_scholarship_list`, {params: params}).then(res => res.data);
 };
 
-export const collegePublicity = params => {
-    return axios.post(`applications/college_publicity`, params).then(res => res.data);
+export const getSchoolPublicityScholarshipList = params => {
+    return axios.get(`applications/school_publicity_scholarship_list`, {params: params}).then(res => res.data);
+};
+
+export const schoolPublicity = params => {
+    return axios.post(`applications/school_publicity`, params).then(res => res.data);
 };
 
 export const getCollegeMangePublicityList = params => {
     return axios.get(`applications/college_manage_publicity_list`, {params: params}).then(res => res.data);
+};
+
+export const getSchoolMangePublicityList = params => {
+    return axios.get(`applications/school_manage_publicity_list`, {params: params}).then(res => res.data);
 };
 
 export const getMangePublicityDetailList = params => {
@@ -321,6 +333,11 @@ export const feedbackObjection = params => {
 export const getCollegeObjections = params => {
     return axios.get(`applications/college_objection`, {params: params}).then(res => res.data);
 };
+
+export const getSchoolObjections = params => {
+    return axios.get(`applications/school_objection`, {params: params}).then(res => res.data);
+};
+
 
 //基础组件
 export const getYearSelections = params => {

@@ -24,7 +24,8 @@ import AwardCheckPublicity from './views/nav1/school/award_check_publicity'
 import AwardCheckPublicityManage from './views/nav1/school/award_check_publicity_manage'
 import Publicity from './views/nav1/school/publicity.vue'
 
-
+import WinningRecord from './views/nav1/school/winning_record.vue'
+import WinningRecordDetail from './views/nav1/school/winning_record_detail.vue'
 
 export default [
     {
@@ -67,7 +68,8 @@ export default [
         iconCls: 'fa fa-address-card',
         children: [
             {path: 'evaluation', component: ComprehensiveEvaluation, name: '综合评测', right: []},
-            // {path: 'records', component: Page6, name: '获奖记录', right: []},
+            {path: 'winning_record', component: WinningRecord, name: '获奖记录', right: []},
+            {path: 'winning_record_detail/:id', component: WinningRecordDetail, name: '获奖记录详情', hidden: true},
             // {path: 'message', component: Page6, name: '消息提醒', right: []},
             {path: 'setting', component: Setting, name: '初始设置', right: ['SCHOOL']}
         ]

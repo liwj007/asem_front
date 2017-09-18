@@ -277,6 +277,14 @@ export const closeSubmit = params => {
     return axios.post(`applications/close_submit`, querystring.stringify(params)).then(res => res.data);
 };
 
+export const getScholarshipsOfAward = params => {
+    return axios.get(`scholarships/getScholarshipsOfAward`, {params: params}).then(res => res.data);
+};
+
+export const getAwardApplicationsByScholarship = params => {
+    return axios.get(`scholarships/getAwardApplicationsByScholarship`, {params: params}).then(res => res.data);
+};
+
 //公示
 export const getCollegePublicityList = params => {
     return axios.get(`applications/college_publicity_list`, {params: params}).then(res => res.data);

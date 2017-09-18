@@ -15,6 +15,9 @@ import Publicity from './views/nav1/college/publicity.vue'
 import PublicityScholarshipList from './views/nav1/college/publicity_scholarship_list.vue'
 import PublicityObjection from  './views/nav1/college/publicity_objection.vue'
 
+import WinningRecord from './views/nav1/college/winning_record.vue'
+import WinningRecordDetail from './views/nav1/college/winning_record_detail.vue'
+
 export default [
     {
         path: '/scholarship',
@@ -47,6 +50,16 @@ export default [
             {path: 'quota_college/apply', component: QuotaApplyCollege, name: '名额申请', hidden: true},
             {path: 'quota_college/back', component: QuotaBackCollege, name: '名额退回', hidden: true},
             {path: 'time_college', component: EvaluationTimeCollege, name: '评定时间', right: ['SPECIAL_INSTRUCTOR']}
+        ]
+    },
+    {
+        path: '/college',
+        component: Home,
+        name: '其它',
+        iconCls: 'fa fa-address-card',
+        children: [
+            {path: 'winning_record', component: WinningRecord, name: '获奖记录', right: []},
+            {path: 'winning_record_detail/:id', component: WinningRecordDetail, name: '获奖记录详情', hidden: true}
         ]
     }
 ]

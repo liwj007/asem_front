@@ -15,17 +15,20 @@
 
             <el-form-item  label="申请理由">
                 <template v-for="(item, index) in detail.reasons" >
-                    <el-input v-model="item.reason" style="width: 350px;margin-bottom: 10px;" :readonly="true"></el-input>
+                    <el-input type="textarea" v-model="item.reason" style="width: 100%;margin-bottom: 10px;" :readonly="true"></el-input>
                 </template>
             </el-form-item>
 
             <el-form-item label="证明材料">
-                <template v-for="file in detail.files">
+                <template v-for="file in detail.files" v-if="detail.files.length > 0">
                     <el-row>
                         <span>{{file.originalName}}</span>
                         <el-button type="text" @click="download(file.name)">下载</el-button>
                     </el-row>
                 </template>
+                <span v-if="detail.files.length === 0">
+                    无
+                </span>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -44,7 +47,9 @@
         props: ['infoVisible', 'id'],
         data() {
             return {
-                detail: {}
+                detail: {
+                    files: []
+                }
             }
         },
         methods: {
@@ -64,7 +69,9 @@
                 this.$emit('close');
             },
             closeModal: function () {
-                this.detail = {}
+                this.detail = {
+                    files: []
+                }
             }
 
         }

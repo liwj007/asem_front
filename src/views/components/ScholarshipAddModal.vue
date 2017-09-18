@@ -21,26 +21,32 @@
                            accept=".doc,.docx,.pdf"
                            :action="uploadURL"
                            :on-success="handleSuccess"
-                           :on-remove="handleRemove">
+                           :on-remove="handleRemove"
+                           :before-upload="beforeUpload"
+                           :file-list="files">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传doc,docx,pdf文件，且不超过10m</div>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="奖学金等级">
+            <el-form-item label="奖学金等级" :required="true">
                 <el-radio-group v-model="addForm.levelType">
                     <el-radio label="MULTI">多个等级</el-radio>
                     <el-radio label="AVG">均等</el-radio>
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item prop="prizes">
+            <el-form-item prop="prizes" >
                 <div v-if="addForm.levelType === 'MULTI'">
                     <el-form-item v-for="(item, index) in addForm.prizes" :key="index" style="padding-bottom: 5px;">
                         <el-input v-model="item.prizeName" style="width: 100px;" :readonly="true"></el-input>
-                        奖励金额：<el-input-number v-model.number="item.money" style="width: 200px;"
-                                  :min="100" :max="100000" @blur="check"></el-input-number>元
-                        奖励人数：<el-input-number v-model.number="item.number" style="width: 200px;"
-                                 :min="1" :max="100" @blur="check"></el-input-number>人
+                        奖励金额：
+                        <el-input-number v-model.number="item.money" style="width: 200px;"
+                                         :min="100" :max="100000" @blur="check"></el-input-number>
+                        元
+                        奖励人数：
+                        <el-input-number v-model.number="item.number" style="width: 200px;"
+                                         :min="1" :max="100" @blur="check"></el-input-number>
+                        人
                         <el-button @click.prevent="removeLevelItem(item)" v-show="index === addForm.prizes.length-1">
                             删除
                         </el-button>
@@ -51,10 +57,14 @@
                     </el-form-item>
                 </div>
                 <div v-else>
-                    奖励金额：<el-input-number v-model="addForm.avgMoney" style="width: 200px;"
-                                          :min="100" :max="100000" @blur="check"></el-input-number>元
-                    奖励人数：<el-input-number v-model="addForm.avgNumber" style="width: 200px;"
-                                          :min="1" :max="100" @blur="check"></el-input-number>人
+                    奖励金额：
+                    <el-input-number v-model="addForm.avgMoney" style="width: 200px;"
+                                     :min="100" :max="100000" @blur="check"></el-input-number>
+                    元
+                    奖励人数：
+                    <el-input-number v-model="addForm.avgNumber" style="width: 200px;"
+                                     :min="1" :max="100" @blur="check"></el-input-number>
+                    人
                 </div>
             </el-form-item>
 
@@ -74,6 +84,7 @@
     } from '../../api/api';
     import ElFormItem from "../../../node_modules/element-ui/packages/form/src/form-item.vue";
     import {mapGetters} from 'vuex'
+
     export default {
         components: {ElFormItem},
         name: 'AddScholarshipModal',
@@ -119,10 +130,10 @@
                 addLoading: false,
                 addFormRules: {
                     name: [
-                        {required: true, message: '请输入奖学金名称', trigger: 'blur'}
+                        {required: true, message: '请输入奖学金名称', trigger: 'blur', whitespace: true}
                     ],
                     requirement: [
-                        {required: true, message: '请输入申请条件', trigger: 'blur'}
+                        {required: true, message: '请输入申请条件', trigger: 'blur', whitespace: true}
                     ],
                     templateId: [
                         {validator: checkTemplate, trigger: 'change'}
@@ -205,13 +216,26 @@
                     }
                 });
             },
+            beforeUpload: function (file) {
+                for (let index in this.files) {
+                    let tmp = this.files[index]
+                    if (file.name === tmp.name) {
+                        this.$message({
+                            message: '已包含选择的文件，请选择其他文件',
+                            type: 'error'
+                        });
+                        return false
+                    }
+                }
+            },
             handleRemove(file, fileList) {
-                this.files = fileList;
+                this.files = fileList
             },
             handleSuccess: function (response, file, fileList) {
                 if (response.status === true) {
                     this.files = fileList;
                 } else {
+                    this.files = fileList.slice(0,-1)
                     this.$message({
                         message: response.message,
                         type: 'error'

@@ -26,7 +26,10 @@
 
             </el-form>
             <el-table :data="detail.tableData" stripe style="width: 100%">
-                <el-table-column type="index" width="50">
+                <el-table-column type="index" width="70" label="序号">
+                    <template scope="scope">
+                        {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                    </template>
                 </el-table-column>
                 <el-table-column prop="unitName" label="学院">
                 </el-table-column>
@@ -43,8 +46,8 @@
                 <el-col :span="12">
                     <el-pagination
                             @current-change="handleInfoCurrentChange"
-                            :current-page="currentInfoPage"
-                            :page-size="5"
+                            :current-page="currentPage"
+                            :page-size="currentPageSize"
                             layout="total, prev, pager, next, jumper"
                             :total="detail.list.length" style="text-align: center;">
                     </el-pagination>
@@ -72,15 +75,16 @@
                 detail: {
                     list: []
                 },
-                currentInfoPage: 1,
+                currentPage: 1,
+                currentPageSize: 5,
                 isLoaded: false
             }
         },
         methods: {
             handleInfoCurrentChange: function (val) {
-                this.currentInfoPage = val
-                this.detail.tableData = this.detail.list.slice((this.currentInfoPage - 1) * 5,
-                    this.currentInfoPage * 5)
+                this.currentPage = val
+                this.detail.tableData = this.detail.list.slice((this.currentPage - 1) * this.currentPageSize,
+                    this.currentPage * this.currentPageSize)
             },
             getDetail: function () {
                 let para = {

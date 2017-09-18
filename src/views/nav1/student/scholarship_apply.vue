@@ -20,6 +20,10 @@
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
+                <template scope="scope">
+                    <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
+                    <span v-else>无</span>
+                </template>
             </el-table-column>
             <el-table-column prop="applyStatus" label="申请提交状态">
                 <template scope="scope">
@@ -52,13 +56,19 @@
             <el-table-column label="操作">
                 <template scope="scope">
                     <el-button type="text" size="small" @click="apply(scope, scope.row)"
-                               v-if="scope.row.status==='NO' && scope.row.applyStatus === true">提交申请
+                               v-if="nowTime <= scope.row.endTime && scope.row.status==='NO' && scope.row.applyStatus === true">提交申请
+                    </el-button>
+                    <el-button type="text" size="small" @click="apply(scope, scope.row)"
+                               v-else-if="scope.row.status==='NO' && scope.row.applyStatus === false" :disabled="true">提交申请
                     </el-button>
                     <el-button type="text" size="small" @click="reSubmit(scope, scope.row)"
-                               v-else-if="scope.row.fileStatus==='REJECT' && scope.row.prizeStatus !== 'REJECT'">修改材料
+                               v-else-if="nowTime <= scope.row.endTime && scope.row.fileStatus==='REJECT' && scope.row.prizeStatus !== 'REJECT'">修改材料
                     </el-button>
                     <el-button type="text" size="small" @click="showDetail(scope.row.applicationId)"
-                               v-else>查看申请
+                               v-else-if="scope.row.status!=='NO'">查看申请
+                    </el-button>
+                    <el-button type="text" size="small"
+                               v-else-if="nowTime > scope.row.endTime" :disabled="true">提交申请
                     </el-button>
                 </template>
             </el-table-column>
@@ -96,10 +106,13 @@
     import ApplicationAddModal from '../../components/ApplicationAddModal.vue'
     import ApplicationInfoModal from '../../components/ApplicationInfoModal.vue'
     import ApplicationEditModal from '../../components/ApplicationEditModal.vue'
-
+    import moment from 'moment'
+    import ElButton from "../../../../node_modules/element-ui/packages/button/src/button.vue";
     export default {
         name: 'ScholarshipApply',
-        components: {ApplicationAddModal, ApplicationInfoModal, ApplicationEditModal},
+        components: {
+            ElButton,
+            ApplicationAddModal, ApplicationInfoModal, ApplicationEditModal},
         data() {
             return {
                 editVisible: false,
@@ -116,6 +129,12 @@
                 tableData: [],
                 total: 1,
                 listLoading: false
+            }
+        },
+        computed: {
+            nowTime: function () {
+                let tmp = new Date()
+                return tmp.getTime()
             }
         },
         methods: {
@@ -140,6 +159,9 @@
                 getPrizeWhichCanSubmit(para).then((res) => {
                     this.total = res.total;
                     this.tableData = res.list;
+                    for (let index in this.tableData){
+                        this.tableData[index].endTime = moment(this.tableData[index].endDate).toDate().getTime()
+                    }
                     this.listLoading = false;
                 }).catch(() => {
                     this.listLoading = false;

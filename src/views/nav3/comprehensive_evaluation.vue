@@ -15,7 +15,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="filters.college" placeholder="请选择" style=" width: 100%;">
+                    <el-select v-model="filters.collegeId" placeholder="请选择" style=" width: 100%;"  @change="loadMajors">
                         <el-option
                                 v-for="item in colleges"
                                 :key="item.id"
@@ -25,7 +25,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="filters.major" placeholder="请选择" style=" width: 100%;">
+                    <el-select v-model="filters.majorId" placeholder="请选择" style=" width: 100%;" @change="loadGrades">
                         <el-option
                                 v-for="item in majors"
                                 :key="item.id"
@@ -35,7 +35,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="filters.grade" placeholder="请选择" style=" width: 100%;">
+                    <el-select v-model="filters.gradeId" placeholder="请选择" style=" width: 100%;">
                         <el-option
                                 v-for="item in grades"
                                 :key="item.id"
@@ -54,7 +54,10 @@
         </el-col>
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
             <el-table-column prop="name" label="姓名">
             </el-table-column>
@@ -113,9 +116,9 @@
         uploadFileURL,
         uploadComprehensiveEvaluation,
         getYearSelections,
-        getCollegeSelections,
-        getMajorSelections,
-        getGradeSelections
+        getColleges,
+        getMajorsByCollege,
+        getGradesByMajor
     } from '../../api/api';
     export default {
         name: 'ComprehensiveEvaluation',
@@ -129,9 +132,9 @@
             return {
                 filters: {
                     year: '',
-                    college: '',
-                    major: '',
-                    grade: ''
+                    collegeId: '',
+                    majorId: '',
+                    gradeId: ''
                 },
                 years: [],
                 colleges: [],
@@ -209,9 +212,9 @@
                     pageNum: this.currentPage,
                     pageSize: this.currentPageSize,
                     year: this.filters.year,
-                    college: this.filters.college,
-                    major: this.filters.major,
-                    grade: this.filters.grade
+                    college: this.filters.collegeId,
+                    major: this.filters.majorId,
+                    grade: this.filters.gradeId
                 };
                 this.listLoading = true;
                 getComprehensiveEvaluationList(para).then((res) => {
@@ -220,6 +223,45 @@
                     this.listLoading = false;
                 }).catch((error)=>{
                     this.listLoading = false;
+                });
+            },
+            loadColleges: function () {
+                getColleges().then((res) => {
+                    this.colleges = res;
+                    this.colleges.splice(0,0,{
+                        "id" : 0,
+                        "name" : "不限学院"
+                    })
+                    this.filters.collegeId = 0
+                }).catch((error)=>{
+                });
+            },
+            loadMajors: function () {
+                let para = {
+                    id: this.filters.collegeId
+                }
+                getMajorsByCollege(para).then((res) => {
+                    this.majors = res;
+                    this.majors.splice(0,0,{
+                        "id" : 0,
+                        "name" : "不限专业"
+                    })
+                    this.filters.majorId = 0
+                }).catch((error)=>{
+                });
+            },
+            loadGrades: function () {
+                let para = {
+                    id: this.filters.majorId
+                }
+                getGradesByMajor(para).then((res) => {
+                    this.grades = res;
+                    this.grades.splice(0,0,{
+                        "id" : 0,
+                        "name" : "不限年级"
+                    })
+                    this.filters.gradeId = 0
+                }).catch((error)=>{
                 });
             }
         },
@@ -238,33 +280,8 @@
                 }
             }).catch((error)=>{
             });
-            getCollegeSelections().then((res) => {
-                this.colleges = res;
-                this.colleges.splice(0,0,{
-                    "id" : 0,
-                    "name" : "不限学院"
-                })
-                this.filters.college = 0
-            }).catch((error)=>{
-            });
-            getMajorSelections().then((res) => {
-                this.majors = res;
-                this.majors.splice(0,0,{
-                    "id" : 0,
-                    "name" : "不限专业"
-                })
-                this.filters.major = 0
-            }).catch((error)=>{
-            });
-            getGradeSelections().then((res) => {
-                this.grades = res;
-                this.grades.splice(0,0,{
-                    "id" : 0,
-                    "name" : "不限年级"
-                })
-                this.filters.grade = 0
-            }).catch((error)=>{
-            });
+            this.loadColleges()
+
         }
     }
 </script>

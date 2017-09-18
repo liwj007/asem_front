@@ -6,21 +6,24 @@
                 <el-form-item>
                     <el-button type="text" icon="arrow-left" @click="$router.go(-1)">返回 </el-button>
                 </el-form-item>
-                <el-form-item>
-                    <el-select v-model="filters.name" style="width: 200px">
-                        <el-option label="不限班级" value="0"></el-option>
-                        <el-option label="2" value="1"></el-option>
-                        <el-option label="3" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" v-on:click="">查询</el-button>
-                </el-form-item>
+                <!--<el-form-item>-->
+                    <!--<el-select v-model="filters.name" style="width: 200px">-->
+                        <!--<el-option label="不限班级" value="0"></el-option>-->
+                        <!--<el-option label="2" value="1"></el-option>-->
+                        <!--<el-option label="3" value="2"></el-option>-->
+                    <!--</el-select>-->
+                <!--</el-form-item>-->
+                <!--<el-form-item>-->
+                    <!--<el-button type="primary" v-on:click="">查询</el-button>-->
+                <!--</el-form-item>-->
             </el-form>
         </el-col>
 
         <el-table :data="tableData"  v-loading="listLoading" stripe  style="width: 100%" >
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
             <el-table-column prop="unitName" label="学院"  >
             </el-table-column>
@@ -32,7 +35,7 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template scope="scope">
-                    <el-button type="text" size="small" @click="changeToDetail(scope.row.prizeId)">审核材料
+                    <el-button type="text" size="small" @click="changeToDetail(scope.row.prizeId, scope.row.unitId)">审核材料
                     </el-button>
                 </template>
             </el-table-column>
@@ -83,8 +86,8 @@
                 this.currentPageSize  = val
                 this.getDatas()
             },
-            changeToDetail(val) {
-                this.$router.push('/school/check/award/detail/' + val)
+            changeToDetail(val, unitId) {
+                this.$router.push('/school/check/award/detail/' + val + '/' + unitId)
             },
             getDatas() {
                 let para = {

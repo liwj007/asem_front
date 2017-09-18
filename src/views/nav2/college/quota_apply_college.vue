@@ -17,11 +17,18 @@
         </el-col>
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
+                <template scope="scope">
+                    <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
+                    <span v-else>无</span>
+                </template>
             </el-table-column>
             <el-table-column prop="allocationNumber" label="名额">
             </el-table-column>
@@ -61,11 +68,11 @@
                         <el-option
                                 v-for="prize in item.prizes"
                                 :key="prize.id"
-                                :label="prize.name"
+                                :label="prize.name===''?'无':prize.name"
                                 :value="prize.id">
                         </el-option>
                     </el-select>
-                    <el-input-number v-model="item.applyNumber" :min="0" :max="1000"  style="width: 130px"></el-input-number>
+                    <el-input-number v-model="item.applyNumber" :min="1" :max="1000"  style="width: 130px"></el-input-number>
                     <el-button @click.prevent="removeItem(item)" v-show="addForm.options.length > 1">删除</el-button>
                 </el-form-item>
                 <el-form-item>

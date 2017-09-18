@@ -17,11 +17,18 @@
         </el-col>
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
+                <template scope="scope">
+                    <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
+                    <span v-else>无</span>
+                </template>
             </el-table-column>
             <el-table-column prop="allocationNumber" label="原先分配名额">
             </el-table-column>
@@ -55,15 +62,16 @@
                                 :value="scholarship.id">
                         </el-option>
                     </el-select>
-                    <el-select v-model="item.prizeId" placeholder="奖学金级别" style="width: 150px">
+                    <el-select v-model="item.prizeId" placeholder="奖学金级别" style="width: 150px"
+                               @change="">
                         <el-option
                                 v-for="prize in item.prizes"
                                 :key="prize.id"
-                                :label="prize.name"
+                                :label="prize.name===''?'无':prize.name"
                                 :value="prize.id">
                         </el-option>
                     </el-select>
-                    <el-input-number v-model="item.applyNumber" :min="0" :max="1000"  style="width: 130px"></el-input-number>
+                    <el-input-number v-model="item.applyNumber" :min="1" :max="1000"  style="width: 130px"></el-input-number>
                     <el-button @click.prevent="removeItem(item)" v-show="addForm.options.length > 1">删除</el-button>
                 </el-form-item>
                 <el-form-item>
@@ -110,7 +118,8 @@
                 scholarships: [],
                 helpMap: {},
                 sizeLimit: 5,
-                canAddItem: true
+                canAddItem: true,
+                prizeMap: {}
             }
         },
         methods: {
@@ -121,6 +130,9 @@
             changeScholarship: function (index) {
                 this.addForm.options[index].prizes = this.helpMap[this.addForm.options[index].scholarshipId]
                 this.addForm.options[index].prizeId = ''
+            },
+            changePrize: function (item,val) {
+                console.log(item,val)
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
@@ -166,6 +178,7 @@
                                 id: res[index].prizes[index2].id,
                                 name: res[index].prizes[index2].prizeName
                             })
+                            this.prizeMap[res[index].prizes[index2].id] = res[index].prizes[index2].number
                         }
                         data.push({
                             id: scholarshipId,
@@ -183,6 +196,27 @@
                 let para = []
                 for (let index in this.addForm.options) {
                     let option = this.addForm.options[index]
+                    if (!option.scholarshipId || option.scholarshipId === ''){
+                        this.$message({
+                            message: '请选择奖学金',
+                            type: 'error'
+                        });
+                        return
+                    }
+                    if (!option.prizeId || option.prizeId === ''){
+                        this.$message({
+                            message: '请选择奖学金等级',
+                            type: 'error'
+                        });
+                        return
+                    }
+                    if (option.applyNumber > this.prizeMap[option.prizeId]){
+                        this.$message({
+                            message: '奖学金退回名额不能大于分配到的名额',
+                            type: 'error'
+                        });
+                        return
+                    }
                     para.push({
                         prizeId: option.prizeId,
                         scholarshipId: option.scholarshipId,

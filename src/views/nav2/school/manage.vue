@@ -14,7 +14,10 @@
         <el-table :data="dataList" v-loading="listLoading" style="width: 100%;" @selection-change="selsChange">
             <el-table-column type="selection" width="50">
             </el-table-column>
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称" sortable>
             </el-table-column>
@@ -47,8 +50,8 @@
             <el-table-column label="操作" width="250">
                 <template scope="scope">
                     <el-button size="small" type="text" @click="handleDetail(scope.$index, scope.row)">查看</el-button>
-                    <el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    <el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)" :disabled="scope.row.status !== '新建'">编辑</el-button>
+                    <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)" :disabled="scope.row.status !== '新建'">删除</el-button>
                     <el-button type="text" size="small" @click="openScholarship(scope.$index, scope.row)">开放给学生</el-button>
                 </template>
             </el-table-column>
@@ -180,6 +183,13 @@
             },
 
             handleDelete: function (index, row) {
+                if (row.status !== '新建'){
+                    this.$message({
+                        message: '很抱歉，该奖学金已进入评定流程，无法进行删除',
+                        type: 'error'
+                    });
+                    return
+                }
                 this.deleteItem = true
                 this.handleDetail(index,row)
             },
@@ -208,6 +218,13 @@
             },
 
             handleEdit: function (index, row) {
+                if (row.status !== '新建'){
+                    this.$message({
+                        message: '很抱歉，该奖学金已进入评定流程，无法进行编辑',
+                        type: 'error'
+                    });
+                    return
+                }
                 this.scholarshipId = row.scholarshipId
                 this.editFormVisible = true;
             },
@@ -224,10 +241,6 @@
                     this.detailVisible = true
                 }).catch((error)=>{
                 });
-            },
-            handleDelete: function (index, row) {
-                this.deleteItem = true
-                this.handleDetail(index, row)
             },
             openScholarship: function (index, row) {
                 let para = {
@@ -249,7 +262,7 @@
         created() {
             this.$emit('viewIn', [{
                 name: '奖学金维护',
-                url: '/manage'
+                url: '/school/manage'
             }]);
         }
     }

@@ -345,16 +345,32 @@ export const getYearSelections = params => {
 };
 
 
-export const getCollegeSelections = params => {
-    return axios.get(`help/college_selection`, {params: params}).then(res => res.data);
+export const getColleges = params => {
+    return axios.get(`rs/getColleges`, {params: params}).then(res => res.data);
 };
 
-export const getMajorSelections = params => {
-    return axios.get(`help/major_selection`, {params: params}).then(res => res.data);
+export const getMajorsByCollege = params => {
+    return axios.get(`rs/getMajorsByCollege`, {params: params}).then(res => res.data);
 };
 
-export const getGradeSelections = params => {
-    return axios.get(`help/grade_selection`, {params: params}).then(res => res.data);
+export const getGradesByMajor = params => {
+    return axios.get(`rs/getGradesByMajor`, {params: params}).then(res => res.data);
+};
+
+export const getManageGrades = params => {
+    return axios.get(`rs/getManageGrades`, {params: params}).then(res => res.data);
+};
+
+export const getClassByGradeAndMajor = params => {
+    return axios.get(`rs/getClassByGradeAndMajor`, {params: params}).then(res => res.data);
+};
+
+export const getManageClassByGrade = params => {
+    return axios.get(`rs/getManageClassByGrade`, {params: params}).then(res => res.data);
+};
+
+export const getPrizesByScholarship = params => {
+    return axios.get(`prizes/getPrizesByScholarship`, {params: params}).then(res => res.data);
 };
 
 

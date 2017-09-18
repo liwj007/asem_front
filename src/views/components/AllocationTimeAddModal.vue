@@ -3,8 +3,8 @@
                :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" size="tiny">
         <el-row>
             <el-col :span="24">
-                <el-form :model="addForm" label-width="150px" ref="addForm">
-                    <el-form-item label="分配奖项" prop="prizes">
+                <el-form :model="addForm" label-width="150px" ref="addForm" :rules="addFormRules">
+                    <el-form-item label="分配奖项" prop="prizes" :required="true">
                         <el-select v-model="addForm.prizes" multiple placeholder="请选择" style=" width: 100%;">
                             <el-option
                                     v-for="item in selectPrizes"
@@ -59,6 +59,7 @@
     } from '../../api/api';
     import moment from 'moment'
     import ElFormItem from "../../../node_modules/element-ui/packages/form/src/form-item.vue";
+
     export default {
         components: {ElFormItem},
         name: 'AllocationTimeAddModal',
@@ -97,22 +98,33 @@
         },
         data() {
             let _this = this;
+            var checkPrizes = (rule, value, callback) => {
+                if (!value || value.length === 0) {
+                    return callback(new Error('请选择奖学金'));
+                }
+                callback();
+            };
             return {
+                addFormRules: {
+                    prizes: [
+                        {validator: checkPrizes, trigger: 'change'}
+                    ]
+                },
                 stuDateOptions: {
                     disabledDate(time) {
-                        return time.getTime() < Date.now() - 8.64e7 || time.getTime() > new Date(_this.addForm.collegeEndDate).getTime() ;
+                        return time.getTime() < Date.now() - 8.64e7 || time.getTime() > new Date(_this.addForm.collegeEndDate).getTime();
                     }
                 },
                 collegeDateOptions: {
                     disabledDate(time) {
-                        return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(_this.addForm.stuStartDate).getTime()- 8.64e7 ;
+                        return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(_this.addForm.stuStartDate).getTime() - 8.64e7;
                     }
                 },
                 addLoading: false,
                 addForm: {
-                    stuStartDate: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),
+                    stuStartDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
                     stuStartTime: '00:00',
-                    collegeEndDate: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()).getTime() + 8.64e7 * 7,
+                    collegeEndDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime() + 8.64e7 * 7,
                     collegeEndTime: '00:00',
                     prizes: [],
                     name: '',
@@ -129,9 +141,9 @@
             },
             closeModal: function () {
                 this.addForm = {
-                    stuStartDate: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),
+                    stuStartDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
                     stuStartTime: '00:00',
-                    collegeEndDate: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()).getTime() + 8.64e7 * 7,
+                    collegeEndDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime() + 8.64e7 * 7,
                     collegeEndTime: '00:00',
                     prizes: [],
                     name: '',
@@ -143,37 +155,45 @@
                 this.$emit('close')
             },
             addSubmit: function () {
-                let studentStart = moment(this.addForm.stuStartDate)
-                let tmp = this.addForm.stuStartTime.split(':')
-                studentStart.hour(tmp[0])
-                studentStart.minute(tmp[1])
-                let collegeEnd = moment(this.addForm.collegeEndDate)
-                tmp = this.addForm.collegeEndTime.split(':')
-                collegeEnd.hour(tmp[0])
-                collegeEnd.minute(tmp[1])
-                if (studentStart>collegeEnd){
-                    this.$message({
-                        message: '学生开始时间不能晚于学院截止时间',
-                        type: 'error'
-                    });
-                    return
-                }
-                let list = []
-                for (let index in this.addForm.prizes) {
-                    list.push({
-                        scholarshipId: this.addForm.prizes[index],
-                        studentStartDate: studentStart.format('YYYY-MM-DD HH:mm:00'),
-                        collegeEndDate: collegeEnd.format('YYYY-MM-DD HH:mm:00')
-                    })
-                }
-                let para = list
-                allocationTime(para).then((res) => {
-                    this.$message({
-                        message: '分配成功',
-                        type: 'success'
-                    });
-                    this.$emit('created')
-                }).catch(()=>{});
+                this.$refs['addForm'].validate((valid) => {
+                    if (valid) {
+                        let studentStart = moment(this.addForm.stuStartDate)
+                        let tmp = this.addForm.stuStartTime.split(':')
+                        studentStart.hour(tmp[0])
+                        studentStart.minute(tmp[1])
+                        let collegeEnd = moment(this.addForm.collegeEndDate)
+                        tmp = this.addForm.collegeEndTime.split(':')
+                        collegeEnd.hour(tmp[0])
+                        collegeEnd.minute(tmp[1])
+                        if (studentStart > collegeEnd) {
+                            this.$message({
+                                message: '学生开始时间不能晚于学院截止时间',
+                                type: 'error'
+                            });
+                            return
+                        }
+                        let list = []
+                        for (let index in this.addForm.prizes) {
+                            list.push({
+                                scholarshipId: this.addForm.prizes[index],
+                                studentStartDate: studentStart.format('YYYY-MM-DD HH:mm:00'),
+                                collegeEndDate: collegeEnd.format('YYYY-MM-DD HH:mm:00')
+                            })
+                        }
+                        let para = list
+                        allocationTime(para).then((res) => {
+                            this.$message({
+                                message: '分配成功',
+                                type: 'success'
+                            });
+                            this.$emit('created')
+                        }).catch(() => {
+                        })
+                    } else {
+                        return false
+                    }
+                })
+
             }
         }
     }

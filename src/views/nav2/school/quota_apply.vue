@@ -14,15 +14,21 @@
         <!--</el-col>-->
 
         <el-table :data="tableData"  v-loading="listLoading" stripe  style="width: 100%" @selection-change="selsChange">
-            <el-table-column type="selection" width="55">
+            <el-table-column type="selection" width="55"  :selectable="canSelect">
             </el-table-column>
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
             <el-table-column prop="unitName" label="申请人"  >
             </el-table-column>
             <el-table-column  prop="scholarshipName" label="奖学金名称"  >
             </el-table-column>
-            <el-table-column prop="prizeName" label="等级" >
+            <el-table-column prop="prizeName" label="等级">
+                <template scope="scope">
+                    {{scope.row.prizeName===''?'无':scope.row.prizeName}}
+                </template>
             </el-table-column>
             <el-table-column prop="allocationNumber" label="分配名额" >
             </el-table-column>
@@ -87,6 +93,9 @@
             }
         },
         methods: {
+            canSelect: function (row,index) {
+                return row.status === '申请中'
+            },
             selsChange: function (sels) {
                 this.sels = sels;
             },
@@ -129,8 +138,12 @@
                 });
             },
             passBatch: function () {
+                let tmp = []
+                for (let index in this.sels){
+                    tmp.push(this.sels[index].id)
+                }
                 let para = {
-                    ids: this.sels,
+                    ids: tmp,
                     result: 'PASS'
                 }
                 checkQuotaApply(para).then((res) => {
@@ -143,8 +156,12 @@
                 }).catch((error)=>{});
             },
             rejectBatch: function () {
+                let tmp = []
+                for (let index in this.sels){
+                    tmp.push(this.sels[index].id)
+                }
                 let para = {
-                    ids: this.sels,
+                    ids: tmp,
                     result: 'REJECT'
                 }
                 checkQuotaApply(para).then((res) => {

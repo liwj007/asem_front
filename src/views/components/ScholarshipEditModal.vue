@@ -30,12 +30,14 @@
                         accept=".doc,.docx,.pdf"
                         :action="uploadURL"
                         :on-success="handleSuccess"
-                        :on-remove="handleRemove">
+                        :on-remove="handleRemove"
+                        :before-upload="beforeUpload"
+                        :file-list="files">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传doc,docx,pdf文件，且不超过1m</div>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="奖学金等级">
+            <el-form-item label="奖学金等级" :required="true">
                 <el-radio-group v-model="editForm.levelType">
                     <el-radio label="MULTI">多个等级</el-radio>
                     <el-radio label="AVG">均等</el-radio>
@@ -125,10 +127,10 @@
             return {
                 addFormRules: {
                     name: [
-                        {required: true, message: '请输入奖学金名称', trigger: 'blur'}
+                        {required: true, message: '请输入奖学金名称', trigger: 'blur', whitespace: true}
                     ],
                     requirement: [
-                        {required: true, message: '请输入申请条件', trigger: 'blur'}
+                        {required: true, message: '请输入申请条件', trigger: 'blur', whitespace: true}
                     ],
                     templateId: [
                         {validator: checkTemplate, trigger: 'change'}
@@ -155,6 +157,26 @@
             }
         },
         methods: {
+            beforeUpload: function (uploadFile) {
+                let tmp = []
+                for (let index in this.files) {
+                    let file = this.files[index]
+                    tmp.push(file.name)
+                }
+                for (let index in this.editForm.files) {
+                    let file = this.editForm.files[index]
+                    tmp.push(file.originalName)
+                }
+                for (let index in tmp) {
+                    if (uploadFile.name === tmp[index]) {
+                        this.$message({
+                            message: '已包含选择的文件，请选择其他文件',
+                            type: 'error'
+                        });
+                        return false
+                    }
+                }
+            },
             _convert: function (str) {
                 var arr = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
                 for (var i = 0; i < arr.length; i++) {
@@ -188,6 +210,7 @@
                 if (response.status === true) {
                     this.files = fileList;
                 } else {
+                    this.files = fileList.slice(0,-1)
                     this.$message({
                         message: response.message,
                         type: 'error'

@@ -1,62 +1,35 @@
 <template>
     <section>
-        <!--工具条-->
-        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-            <el-form :inline="true" :model="filters">
+        <FixCollegeSearchBar @search="search" :collegeId="getManageUnit">
+            <template slot="other">
                 <el-form-item>
-                    <el-button type="text" icon="arrow-left" @click="$router.go(-1)">返回 </el-button>
+                    <el-select v-model="filters.fileStatus" style="width: 200px;">
+                        <el-option label="不限材料审核状态" value="0"></el-option>
+                        <el-option label="审核中" value="1"></el-option>
+                        <el-option label="需修改" value="3"></el-option>
+                        <el-option label="重新提交" value="4"></el-option>
+                        <el-option label="审核通过" value="2"></el-option>
+                    </el-select>
                 </el-form-item>
-                <!--<el-form-item>-->
-                    <!--<el-select v-model="filters.major" style="width: 120px;">-->
-                        <!--<el-option label="不限专业" value="0"></el-option>-->
-                        <!--<el-option label="专业1" value="1"></el-option>-->
-                        <!--<el-option label="专业2" value="2"></el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item>-->
-                    <!--<el-select v-model="filters.grade" style="width: 120px;">-->
-                        <!--<el-option label="不限年级" value="0"></el-option>-->
-                        <!--<el-option label="年级1" value="1"></el-option>-->
-                        <!--<el-option label="年级2" value="2"></el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item>-->
-                    <!--<el-select v-model="filters.className" style="width: 120px;">-->
-                        <!--<el-option label="不限班级" value="0"></el-option>-->
-                        <!--<el-option label="班级1" value="1"></el-option>-->
-                        <!--<el-option label="班级2" value="2"></el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item>-->
-                    <!--<el-select v-model="filters.submitStatus" style="width: 120px;">-->
-                        <!--<el-option label="不限提交" value="0"></el-option>-->
-                        <!--<el-option label="已提交" value="1"></el-option>-->
-                        <!--<el-option label="需修改" value="2"></el-option>-->
-                        <!--<el-option label="重新提交" value="3"></el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item>-->
-                    <!--<el-select v-model="filters.checkStatus" style="width: 120px;">-->
-                        <!--<el-option label="不限审核" value="0"></el-option>-->
-                        <!--<el-option label="审核中" value="1"></el-option>-->
-                        <!--<el-option label="审核通过" value="2"></el-option>-->
-                        <!--<el-option label="审核不通过" value="3"></el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item>-->
-                    <!--<el-input v-model="filters.name" placeholder="学号或姓名"></el-input>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item>-->
-                    <!--<el-button type="text" v-on:click="dialogFormVisible=true">高级设置</el-button>-->
-                    <!--<el-button type="primary" v-on:click="">查询</el-button>-->
-                <!--</el-form-item>-->
-            </el-form>
-        </el-col>
+                <el-form-item>
+                    <el-select v-model="filters.prizeStatus" style="width: 200px;">
+                        <el-option label="不限获奖审核状态" value="0"></el-option>
+                        <el-option label="审核中" value="2"></el-option>
+                        <el-option label="带提交" value="1"></el-option>
+                        <el-option label="审核通过" value="3"></el-option>
+                        <el-option label="审核不通过" value="4"></el-option>
+                    </el-select>
+                </el-form-item>
+            </template>
+        </FixCollegeSearchBar>
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%" @selection-change="selsChange">
             <el-table-column type="selection" width="50" :selectable="canSelect">
             </el-table-column>
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
             <el-table-column prop="name" label="姓名">
             </el-table-column>
@@ -83,7 +56,7 @@
             <el-table-column prop="fileStatus" label="材料提交状态">
                 <template scope="scope">
                     <span v-if="scope.row.fileStatus === 'SUBMIT'">已提交</span>
-                    <span v-else-if="scope.row.fileStatus === 'PASS'">已提交</span>
+                    <span v-else-if="scope.row.fileStatus === 'PASS'">已通过</span>
                     <span v-else-if="scope.row.fileStatus === 'REJECT'">需修改</span>
                     <span v-else-if="scope.row.fileStatus === 'RESUBMIT'">重新提交</span>
                 </template>
@@ -115,7 +88,7 @@
                     @current-change="handleCurrentChange"
                     :current-page="currentPage"
                     :page-sizes="[10, 20, 30, 40]"
-                    :page-size="100"
+                    :page-size="currentPageSize"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="total" style="float:right;">
             </el-pagination>
@@ -200,11 +173,17 @@
         checkPrizeStatus
     } from '../../../api/api';
     import ApplicationInfoModal from '../../components/ApplicationInfoModal.vue'
-
+    import FixCollegeSearchBar from  '../../components/FixCollegeSearch.vue'
+    import {mapGetters} from 'vuex'
     export default {
         name: 'AwardCheckDetail',
         props: ['itemId'],
-        components: {ApplicationInfoModal},
+        components: {ApplicationInfoModal,FixCollegeSearchBar},
+        computed: {
+            ...mapGetters([
+                'getManageUnit'
+            ])
+        },
         data() {
             return {
                 canSelects: [],
@@ -223,13 +202,13 @@
                 applicationId: '',
                 formLabelWidth: '100px',
                 filters: {
-                    name: '',
-                    college: '0',
-                    major: '0',
-                    grade: '0',
-                    className: '0',
-                    submitStatus: '0',
-                    checkStatus: '0'
+                    content: '',
+                    collegeId: '0',
+                    majorId: '0',
+                    gradeId: '0',
+                    classId: '0',
+                    fileStatus: '0',
+                    prizeStatus: '0'
                 },
                 sels: [],
                 currentPage: 1,
@@ -276,7 +255,14 @@
                 let para = {
                     pageNum: this.currentPage,
                     pageSize: this.currentPageSize,
-                    prizeId: this.$route.params.id
+                    prizeId: this.$route.params.id,
+                    collegeId: this.filters.collegeId,
+                    majorId: this.filters.majorId,
+                    gradeId: this.filters.gradeId,
+                    classId: this.filters.classId,
+                    content: this.filters.content,
+                    fileStatus: this.filters.fileStatus,
+                    prizeStatus: this.filters.prizeStatus
                 };
                 this.listLoading = true;
                 getAwardCheckDetailList(para).then((res) => {
@@ -302,6 +288,14 @@
             showDetail: function (id) {
                 this.applicationId = id
                 this.infoVisible = true
+            },
+            search: function (val) {
+                this.filters.collegeId = val.collegeId
+                this.filters.majorId = val.majorId
+                this.filters.gradeId = val.gradeId
+                this.filters.classId = val.classId
+                this.filters.content = val.content
+                this.getDatas()
             }
         },
         mounted() {

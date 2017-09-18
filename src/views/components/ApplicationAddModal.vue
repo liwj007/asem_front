@@ -19,15 +19,18 @@
                            accept=".doc,.docx,.pdf"
                            :action="uploadURL"
                            :on-success="handleSuccess"
-                           :on-remove="handleRemove">
+                           :on-remove="handleRemove"
+                           :before-upload="beforeUpload"
+                           :file-list="files">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传doc,docx,pdf文件，且不超过10m</div>
                 </el-upload>
             </el-form-item>
-            <el-form-item  prop="reasons" label="申请理由">
-                <div v-for="(item, index) in addForm.reasons" :key="index" label="申请理由" style="padding-bottom: 10px;">
-                    <el-input v-model="item.reason" style="width: 350px;" :maxlength="100" placeholder="100字以内"></el-input>
-                    <el-button @click.prevent="removeItem(item)" :disabled="addForm.reasons.length===1" >删除</el-button>
+            <el-form-item prop="reasons" label="申请理由">
+                <div v-for="(item, index) in addForm.reasons" :key="index" style="padding-bottom: 10px;">
+                    <el-input v-model="item.reason" style="width: 350px;" :maxlength="100"
+                              placeholder="100字以内"></el-input>
+                    <el-button @click.prevent="removeItem(item)" :disabled="addForm.reasons.length===1">删除</el-button>
                 </div>
             </el-form-item>
 
@@ -77,7 +80,7 @@
             return {
                 addFormRules: {
                     evaluation: [
-                        {required: true, message: '请输入综合评测信息', trigger: 'blur'}
+                        {required: true, message: '请输入综合评测信息', trigger: 'blur', whitespace: true}
                     ],
                     reasons: [
                         {validator: checkReasons, trigger: 'change'}
@@ -98,10 +101,23 @@
             handleRemove(file, fileList) {
                 this.files = fileList;
             },
+            beforeUpload: function (file) {
+                for (let index in this.files) {
+                    let tmp = this.files[index]
+                    if (file.name === tmp.name) {
+                        this.$message({
+                            message: '已包含选择的文件，请选择其他文件',
+                            type: 'error'
+                        });
+                        return false
+                    }
+                }
+            },
             handleSuccess: function (response, file, fileList) {
                 if (response.status === true) {
                     this.files = fileList;
                 } else {
+                    this.files = fileList.slice(0,-1)
                     this.$message({
                         message: response.message,
                         type: 'error'
@@ -111,7 +127,7 @@
             openModal: function () {
                 getMyselfEvaluation().then((res) => {
                     this.addForm.evaluation = res.evaluation;
-                }).catch((error)=>{
+                }).catch((error) => {
                 });
             },
             cancelAdd: function () {
@@ -134,7 +150,7 @@
                 }
             },
             addItem: function () {
-                if (this.addForm.reasons.length < this.limitSize){
+                if (this.addForm.reasons.length < this.limitSize) {
                     this.addForm.reasons.push({
                         reason: ''
                     });
@@ -152,7 +168,7 @@
                             })
                         }
                         let ids = []
-                        for (let index in this.sels){
+                        for (let index in this.sels) {
                             ids.push(this.sels[index].prizeId)
                         }
                         let para = {
@@ -167,7 +183,7 @@
                                 type: 'success'
                             });
                             this.$emit('created');
-                        }).catch((error)=>{
+                        }).catch((error) => {
                         });
                     } else {
                         return false

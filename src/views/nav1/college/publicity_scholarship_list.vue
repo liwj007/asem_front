@@ -3,7 +3,10 @@
 
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%" >
-            <el-table-column type="index" width="60">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>

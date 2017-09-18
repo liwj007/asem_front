@@ -43,7 +43,7 @@ export default [
             {path: 'check/award/publicity_manage', component: AwardCheckPublicityManage, name: '公示范围确认', hidden: true},
             {path: 'publicity_objection', component: PublicityObjection, name: '异议反馈', hidden: true},
             {path: 'check/award/college_list/:id', component: AwardCheckCollegeList, name: '获奖审核学院列表', hidden: true},
-            {path: 'check/award/detail/:id', component: AwardCheckDetail, name: '获奖审核明细', hidden: true}
+            {path: 'check/award/detail/:id/:unitId', component: AwardCheckDetail, name: '获奖审核明细', hidden: true}
         ]
     },
     {

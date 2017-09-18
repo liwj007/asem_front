@@ -12,7 +12,7 @@
                         <el-col :span="11">
                             <el-date-picker type="date" placeholder="选择日期" v-model="addForm.stuStartDate"
                                             :picker-options="stuDateOptions" style="width: 100%;"
-                                            :editable="false" :clearable="false" @change="changeDate1"></el-date-picker>
+                                            :editable="false" :clearable="false" @change=""></el-date-picker>
                         </el-col>
                         <el-col class="line" :span="2" style="text-align: center;">-</el-col>
                         <el-col :span="11">
@@ -25,7 +25,7 @@
                         <el-col :span="11">
                             <el-date-picker type="date" placeholder="选择日期" v-model="addForm.collegeEndDate"
                                             :picker-options="collegeDateOptions" :editable="false"
-                                            :clearable="false"  style="width: 100%;" @change="changeDate2"></el-date-picker>
+                                            :clearable="false"  style="width: 100%;" @change=""></el-date-picker>
                         </el-col>
                         <el-col class="line" :span="2" style="text-align: center;">-</el-col>
                         <el-col :span="11">
@@ -115,16 +115,6 @@
             }
         },
         methods: {
-            changeDate1: function () {
-                if (moment(this.addForm.stuStartDate).format('YYYY-MM-DD')==moment(this.addForm.collegeEndDate).format('YYYY-MM-DD')) {
-                    this.addForm.stuStartTime = this.addForm.collegeEndTime
-                }
-            },
-            changeDate2: function () {
-                if (moment(this.addForm.stuStartDate).format('YYYY-MM-DD')==moment(this.addForm.collegeEndDate).format('YYYY-MM-DD')) {
-                    this.addForm.collegeEndTime = this.addForm.stuStartTime
-                }
-            },
             editSubmit: function () {
                 let studentStart = moment(this.addForm.stuStartDate)
                 let tmp = this.addForm.stuStartTime.split(':')

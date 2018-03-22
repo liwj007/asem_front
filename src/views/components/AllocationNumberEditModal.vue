@@ -3,7 +3,7 @@
                :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
         <el-row style="min-height: 300px;">
             <el-form :model="detail" label-width="100px" ref="editForm">
-                <el-form-item label="奖项">
+                <el-form-item label="分配奖项">
                     <span v-if="detail.prizeName!=='无'">{{detail.scholarshipName}} {{detail.prizeName}}</span>
                     <span v-else>{{detail.scholarshipName}}</span>
                 </el-form-item>

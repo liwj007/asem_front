@@ -3,6 +3,7 @@ import store from '../vuex/store'
 import Bus from '../bus'
 
 let base = 'http://127.0.0.1:8080/asem';
+// let base = 'http://117.48.200.107:8080/asem_serv';
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = base
@@ -88,6 +89,10 @@ export const getPrizeListPage = params => {
 
 export const openToStudent = params => {
     return axios.post(`scholarships/open_to_student`, querystring.stringify(params)).then(res => res.data);
+};
+
+export const closeScholarship = params => {
+    return axios.post(`scholarships/close_scholarship`, querystring.stringify(params)).then(res => res.data);
 };
 
 export const getAllocatedNumberPrizeListPage = params => {
@@ -305,7 +310,9 @@ export const getSchoolPublicityScholarshipList = params => {
 export const schoolPublicity = params => {
     return axios.post(`applications/school_publicity`, params).then(res => res.data);
 };
-
+export const collegePublicity = params => {
+    return axios.post(`applications/college_publicity`, params).then(res => res.data);
+};
 export const getCollegeMangePublicityList = params => {
     return axios.get(`applications/college_manage_publicity_list`, {params: params}).then(res => res.data);
 };

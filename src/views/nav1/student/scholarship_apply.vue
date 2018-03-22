@@ -38,7 +38,7 @@
                 <template scope="scope">
                     <span v-if="scope.row.fileStatus === 'NO'">未提交</span>
                     <span v-else-if="scope.row.fileStatus === 'SUBMIT'">审核中</span>
-                    <span v-else-if="scope.row.fileStatus === 'RESUBMIT'">重新提交</span>
+                    <span v-else-if="scope.row.fileStatus === 'RESUBMIT'">审核中</span>
                     <span v-else-if="scope.row.fileStatus === 'PASS'">通过审核</span>
                     <span v-else-if="scope.row.fileStatus === 'REJECT'">审核不通过</span>
                 </template>
@@ -146,9 +146,11 @@
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
+                this.getScholarshipsForApply()
             },
             handleSizeChange(val) {
                 this.currentPageSize = val
+                this.getScholarshipsForApply()
             },
             getScholarshipsForApply() {
                 let para = {
@@ -189,6 +191,14 @@
                 this.editVisible = true
             },
             handleApplyBatch: function () {
+//                for(let index in this.sels){
+//                    var tmp = this.sels[index]
+//                    if(this.nowTime > tmp.endTime || tmp.status!=='NO' || tmp.applyStatus !== true){
+//                        this.sels = []
+//                        alert('sss')
+//                        return
+//                    }
+//                }
                 this.addFormVisible = true
             },
             successAdd: function () {

@@ -6,7 +6,7 @@
         <el-form :model="addForm" label-width="100px" ref="addForm" :rules="addFormRules">
             <el-form-item v-for="(item, index) in sels" :key="index" label="申请奖学金">
                 <el-input v-model="item.scholarshipName" style="width: 210px;" :readonly="true"></el-input>
-                <el-input v-model="item.prizeName" style="width: 210px;" :readonly="true"></el-input>
+                <el-input v-model="item.prizeName===''?'无':item.prizeName" style="width: 210px;" :readonly="true"></el-input>
             </el-form-item>
 
             <el-form-item label="综合评测" prop="evaluation">
@@ -64,14 +64,19 @@
             }
         },
         data() {
+            let _this = this;
             var checkReasons = (rule, value, callback) => {
                 if (this.addForm.reasons.length == 0) {
                     return callback(new Error('请输入至少一条申请理由'));
                 } else {
                     for (let index in this.addForm.reasons) {
+//                        let content = _this.Trim(this.addForm.reasons[index].reason)
+//                        if (!content && content!=='') {
+//                            return callback(new Error('申请理由不能为空'));
+//                        }
                         let item = this.addForm.reasons[index]
-                        if (!item.reason) {
-                            return callback(new Error('申请理由不能为空'));
+                        if (!item.reason || _this.Trim(item.reason)==='') {
+                            return callback(new Error('申请理由不能为空或全部输入空格'));
                         }
                     }
                 }
@@ -177,20 +182,26 @@
                             evaluation: this.addForm.evaluation,
                             reasons: this.addForm.reasons
                         }
-                        createApplication(para).then((res) => {
-                            this.$message({
-                                message: '创建成功',
-                                type: 'success'
-                            });
-                            this.$emit('created');
-                        }).catch((error) => {
-                        });
+//                        createApplication(para).then((res) => {
+//                            this.$message({
+//                                message: '创建成功',
+//                                type: 'success'
+//                            });
+//                            this.$emit('created');
+//                        }).catch((error) => {
+//                        });
                     } else {
                         return false
                     }
                 })
+            },
+            Trim: function(str,is_global)
+            {
+                var result;
+                result = str.replace(/(^\s+)|(\s+$)/g,"");
+                result = result.replace(/\s/g,"");
+                return result;
             }
-
-        }
+    }
     }
 </script>

@@ -38,7 +38,8 @@
             <el-table-column label="操作">
                 <template scope="scope">
                     <el-button @click="showInfo(scope.$index, scope.row)" type="text" size="small">查看</el-button>
-                    <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="small" :disabled="scope.row.status!=='新建'"">编辑</el-button>
+                    <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="small"
+                               :disabled="scope.row.status!=='新建'">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -114,6 +115,16 @@
         },
         mounted() {
             this.getScholarships()
+            this.$emit('viewIn', [{
+                name: '名额分配',
+                url: '/school/quota/allocation'
+            }, {
+                name: '名额申请',
+                url: '/school/quota/apply'
+            }, {
+                name: '名额退回',
+                url: '/school/quota/back'
+            }]);
         },
         created() {
             this.$emit('viewIn', [{

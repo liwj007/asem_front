@@ -9,11 +9,12 @@
         </el-col>
 
         <el-table :data="tableData" stripe style="width: 100%">
-            <el-table-column
-                    type="index"
-                    width="50">
+            <el-table-column type="index" width="70" label="序号">
+                <template scope="scope">
+                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                </template>
             </el-table-column>
-            <el-table-column prop="name" label="名称">
+            <el-table-column prop="name" label="模板名称">
             </el-table-column>
             <el-table-column prop="typeName" label="类型">
             </el-table-column>
@@ -63,7 +64,7 @@
                                 <el-form-item label="选择类型：" prop="type">
                                     <el-radio-group v-model="newForm.type">
                                         <el-radio label="SCHOOL">校级及以上</el-radio>
-                                        <el-radio label="COLLEGE">学院</el-radio>
+                                        <el-radio label="COLLEGE">院级</el-radio>
                                     </el-radio-group>
                                 </el-form-item>
                                 <el-form-item label="模板名称：" prop="name">

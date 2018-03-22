@@ -41,11 +41,11 @@
                         <el-input v-model="item.prizeName" style="width: 100px;" :readonly="true"></el-input>
                         奖励金额：
                         <el-input-number v-model.number="item.money" style="width: 200px;"
-                                         :min="100" :max="100000" @blur="check"></el-input-number>
+                                         :min="100" :max="1000000" @blur="check"></el-input-number>
                         元
                         奖励人数：
                         <el-input-number v-model.number="item.number" style="width: 200px;"
-                                         :min="1" :max="100" @blur="check"></el-input-number>
+                                         :min="1"  @blur="check"></el-input-number>
                         人
                         <el-button @click.prevent="removeLevelItem(item)" v-show="index === addForm.prizes.length-1">
                             删除
@@ -59,11 +59,11 @@
                 <div v-else>
                     奖励金额：
                     <el-input-number v-model="addForm.avgMoney" style="width: 200px;"
-                                     :min="100" :max="100000" @blur="check"></el-input-number>
+                                     :min="100" :max="1000000" @blur="check"></el-input-number>
                     元
                     奖励人数：
                     <el-input-number v-model="addForm.avgNumber" style="width: 200px;"
-                                     :min="1" :max="100" @blur="check"></el-input-number>
+                                     :min="1" @blur="check"></el-input-number>
                     人
                 </div>
             </el-form-item>
@@ -136,6 +136,7 @@
                         {required: true, message: '请输入申请条件', trigger: 'blur', whitespace: true}
                     ],
                     templateId: [
+                        {required: true, message: '请选择奖学金类型模板'},
                         {validator: checkTemplate, trigger: 'change'}
                     ],
                     prizes: [
@@ -147,7 +148,13 @@
                     requirement: '',
                     levelType: 'MULTI',
                     templateId: '',
-                    prizes: [],
+                    prizes: [
+                        {
+                            prizeName: '一等奖',
+                            number: '0',
+                            money: '100'
+                        }
+                    ],
                     avgMoney: '',
                     avgNumber: '',
                     unitId: ''
@@ -182,6 +189,7 @@
             },
             //新增
             addSubmit: function () {
+                this.addLoading = true
                 this.$refs['addScholarshipForm'].validate((valid) => {
                     if (valid) {
                         let uploads = []
@@ -209,12 +217,16 @@
                                 type: 'success'
                             });
                             this.$emit('created');
+                            this.addLoading = false
                         }).catch((error) => {
+                            this.addLoading = false
                         });
                     } else {
+                        this.addLoading = false
                         return false;
                     }
                 });
+                this.addLoading = false
             },
             beforeUpload: function (file) {
                 for (let index in this.files) {

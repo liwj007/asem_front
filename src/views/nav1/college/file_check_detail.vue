@@ -7,9 +7,8 @@
                     <el-select v-model="filters.status" style="width: 150px;">
                         <el-option label="不限状态" value="0"></el-option>
                         <el-option label="审核中" value="1"></el-option>
-                        <el-option label="需修改" value="3"></el-option>
-                        <el-option label="重新提交" value="4"></el-option>
                         <el-option label="审核通过" value="2"></el-option>
+                        <el-option label="审核不通过" value="3"></el-option>
                     </el-select>
                 </el-form-item>
             </template>

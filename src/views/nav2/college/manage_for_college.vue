@@ -45,7 +45,7 @@
             </el-table-column>
             <!--<el-table-column prop="status" label="状态" sortable>-->
             <!--</el-table-column>-->
-            <el-table-column label="操作" width="250">
+            <el-table-column label="操作" width="350">
                 <template scope="scope">
                     <el-button size="small" type="text" @click="handleDetail(scope.$index, scope.row)">查看
                     </el-button>
@@ -53,7 +53,7 @@
                     </el-button>
                     <el-button :disabled="scope.row.scholarshipType !=='COLLEGE'" type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除
                     </el-button>
-                    <el-button :disabled="scope.row.scholarshipType !=='COLLEGE'" type="text" size="small" @click="openScholarship(scope.$index, scope.row)">开放给学生
+                    <el-button :disabled="scope.row.scholarshipType !=='COLLEGE'" type="text" size="small" @click="closeScholarships(scope.$index, scope.row)">关闭奖学金
                     </el-button>
                 </template>
             </el-table-column>
@@ -94,7 +94,8 @@
     import {
         getPrizeListPage,
         getScholarshipInfo,
-        openToStudent
+        openToStudent,
+        closeScholarship
     } from '../../../api/api';
     import {mapGetters} from 'vuex'
     import ScholarshipAddModal from '../../components/ScholarshipAddModal.vue'
@@ -196,6 +197,7 @@
             successUpdate: function () {
                 this.editFormVisible = false
                 this.scholarshipId = ''
+                this.currentPage = 1
                 this.getDatas();
             },
             closeEditModal: function () {
@@ -206,20 +208,25 @@
                 this.scholarshipId = row.scholarshipId
                 this.editFormVisible = true;
             },
-            openScholarship: function (index, row) {
-                let para = {
-                    id: row.scholarshipId
-                }
-                openToStudent(para).then((res) => {
-                    this.$message({
-                        message: '开放成功',
-                        type: 'success'
+            closeScholarships: function (index, row) {
+                this.$confirm('确认关闭该奖学金吗?', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    let para = {
+                        id: row.scholarshipId
+                    }
+                    closeScholarship(para).then((res) => {
+                        this.getDatas()
+                        this.$message({
+                            message: '关闭成功',
+                            type: 'success'
+                        });
+                    }).catch((error)=>{
                     });
-                    this.getDatas()
-                }).catch((error)=>{
-                });
-            }
+                }).catch(() => {
 
+                })
+            }
         },
         mounted() {
             this.getDatas();
@@ -227,7 +234,7 @@
         created() {
             this.$emit('viewIn', [{
                 name: '奖学金维护',
-                url: '/manage'
+                url: '/college/manage'
             }]);
         }
     }

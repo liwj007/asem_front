@@ -112,40 +112,40 @@
             return {
                 studentBeginDateOptions: {
                     disabledDate(time) {
-                        if (_this.needGrade) {
-                            return time.getTime() < Date.now() - 8.64e7
-                                || time.getTime() > new Date(_this.addForm.studentEndDate).getTime()
-                                || time.getTime() > new Date(_this.addForm.gradeEndDate).getTime()
-                                || time.getTime() > new Date(_this.addForm.collegeEndDate).getTime();
+                        if (_this.needGrade){
+                            return new Date(time.toLocaleDateString()).getTime() < new Date(new Date().toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.studentEndDate).toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.gradeEndDate).toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.collegeEndDate).toLocaleDateString()).getTime();
                         } else {
-                            return time.getTime() < Date.now() - 8.64e7
-                                || time.getTime() > new Date(_this.addForm.studentEndDate).getTime()
-                                || time.getTime() > new Date(_this.addForm.collegeEndDate).getTime();
+                            return new Date(time.toLocaleDateString()).getTime() < new Date(new Date().toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.studentEndDate).toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.collegeEndDate).toLocaleDateString()).getTime();
                         }
                     }
                 },
                 studentEndDateOptions: {
                     disabledDate(time) {
-                        if (_this.needGrade) {
-                            return time.getTime() < Date.now() - 8.64e7
-                                || time.getTime() < new Date(_this.addForm.studentBeginDate).getTime()
-                                || time.getTime() > new Date(_this.addForm.gradeEndDate).getTime()
-                                || time.getTime() > new Date(_this.addForm.collegeEndDate).getTime();
-                        } else {
-                            return time.getTime() < Date.now() - 8.64e7
-                                || time.getTime() < new Date(_this.addForm.studentBeginDate).getTime()
-                                || time.getTime() > new Date(_this.addForm.collegeEndDate).getTime();
+                        if (_this.needGrade){
+                            return new Date(time.toLocaleDateString()).getTime() < new Date(new Date().toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() < new Date(new Date(_this.addForm.studentBeginDate).toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.gradeEndDate).toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.collegeEndDate).toLocaleDateString()).getTime();
+                        }else{
+                            return new Date(time.toLocaleDateString()).getTime() < new Date(new Date().toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() < new Date(new Date(_this.addForm.studentBeginDate).toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.collegeEndDate).toLocaleDateString()).getTime();
                         }
 
                     }
                 },
                 gradeEndDateOptions: {
                     disabledDate(time) {
-                        if (_this.needGrade) {
-                            return time.getTime() < Date.now() - 8.64e7
-                                || time.getTime() < new Date(_this.addForm.studentBeginDate).getTime()
-                                || time.getTime() < new Date(_this.addForm.studentEndDate).getTime()
-                                || time.getTime() > new Date(_this.addForm.collegeEndDate).getTime();
+                        if (_this.needGrade){
+                            return new Date(time.toLocaleDateString()).getTime() < new Date(new Date().toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() < new Date(new Date(_this.addForm.studentBeginDate).toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() < new Date(new Date(_this.addForm.gradeEndDate).toLocaleDateString()).getTime()
+                                || new Date(time.toLocaleDateString()).getTime() > new Date(new Date(_this.addForm.collegeEndDate).toLocaleDateString()).getTime();
                         }
                     }
                 },

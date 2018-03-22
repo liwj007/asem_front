@@ -1,8 +1,5 @@
 <template>
     <section>
-
-
-
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%" >
             <el-table-column type="index" width="70" label="序号">
                 <template scope="scope">
@@ -31,7 +28,7 @@
             </el-table-column>
             <el-table-column prop="records" label="获奖数">
                 <template scope="scope">
-                    <el-popover trigger="hover" placement="top">
+                    <el-popover trigger="hover" placement="top" v-if="scope.row.records.length>0">
                         <p v-for="item in scope.row.records">
                             {{item}}
                         </p>
@@ -39,6 +36,7 @@
                             <el-tag>{{ scope.row.records.length }}</el-tag>
                         </div>
                     </el-popover>
+                    <el-tag v-else>0</el-tag>
                 </template>
             </el-table-column>
             <el-table-column prop="documents" label="申请材料">

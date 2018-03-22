@@ -5,7 +5,7 @@
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
-                    <el-select v-model="filters.year" placeholder="请选择" style=" width: 100%;">
+                    <el-select v-model="filters.year" placeholder="请选择学年" style=" width: 100%;">
                         <el-option
                                 v-for="item in years"
                                 :key="item.id"
@@ -15,7 +15,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="filters.collegeId" placeholder="请选择" style=" width: 100%;"  @change="loadMajors">
+                    <el-select v-model="filters.collegeId" placeholder="请选择学院" style=" width: 100%;"  @change="loadMajors">
                         <el-option
                                 v-for="item in colleges"
                                 :key="item.id"
@@ -25,7 +25,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="filters.majorId" placeholder="请选择" style=" width: 100%;" @change="loadGrades">
+                    <el-select v-model="filters.majorId" placeholder="请选择专业" style=" width: 100%;" @change="loadGrades">
                         <el-option
                                 v-for="item in majors"
                                 :key="item.id"
@@ -35,7 +35,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="filters.gradeId" placeholder="请选择" style=" width: 100%;">
+                    <el-select v-model="filters.gradeId" placeholder="请选择年级" style=" width: 100%;">
                         <el-option
                                 v-for="item in grades"
                                 :key="item.id"
@@ -87,11 +87,11 @@
             </el-pagination>
         </el-col>
 
-        <el-dialog title="添加奖项" v-model="addFormVisible" :close-on-click-modal="false"
+        <el-dialog title="上传综合评测文件" v-model="addFormVisible" :close-on-click-modal="false"
                    :show-close="false" :close-on-press-escape="false"
                    @close="cancelAdd" size="tiny">
             <el-form label-width="130px">
-                <el-form-item label="上传综合评测文件">
+                <el-form-item label="上传文件">
                     <el-upload ref="uploadComp"
                                class="upload-demo"
                                accept=".xls,.xlsx"
@@ -153,6 +153,7 @@
         methods: {
             cancelAdd: function () {
                 this.files = []
+                this.$refs.uploadComp.clearFiles()
             },
             handleImport: function () {
                 this.addFormVisible = true
@@ -167,6 +168,8 @@
                     })
                 }
                 this.addLoading = true
+                this.files = []
+                this.$refs.uploadComp.clearFiles()
                 uploadComprehensiveEvaluation(uploads).then((res) => {
                     this.$message({
                         message: '上传成功',
@@ -277,6 +280,12 @@
                 if (this.years.length>0) {
                     this.filters.year = this.years[0].id
                     this.getDatas()
+                } else {
+                    this.years.splice(0,0,{
+                        "id" : 0,
+                        "name" : "不限学年"
+                    })
+                    this.filters.year = 0
                 }
             }).catch((error)=>{
             });

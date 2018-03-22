@@ -6,7 +6,7 @@
             <el-form-item label="奖学金名称(30字以内" prop="name">
                 <el-input v-model="editForm.name" auto-complete="off" :maxlength="30"></el-input>
             </el-form-item>
-            <el-form-item label="奖学金类型" prop="type">
+            <el-form-item label="奖学金类型" prop="templateId">
                 <el-select v-model="editForm.templateId" placeholder="请选择奖学金类型模板">
                     <el-option v-for="item in scholarTemplates" :key="item.id" :label="item.name"
                                :value="item.id"></el-option>
@@ -48,9 +48,9 @@
                     <el-form-item v-for="(item, index) in editForm.prizes" :key="index" style="padding-bottom: 5px;">
                         <el-input v-model="item.prizeName" style="width: 100px;" :readonly="true"></el-input>
                         奖励金额：<el-input-number v-model.number="item.money" style="width: 200px;"
-                                              :min="1" :max="100000" @blur="check"></el-input-number>元
+                                              :min="1" :max="1000000" @blur="check"></el-input-number>元
                         奖励人数：<el-input-number v-model.number="item.number" style="width: 200px;"
-                                              :min="1" :max="100" @blur="check"></el-input-number>人
+                                              :min="1" @blur="check"></el-input-number>人
                         <el-button @click.prevent="removeLevelItemEdit(item)"
                                    v-show="index === editForm.prizes.length-1">
                             删除
@@ -63,9 +63,9 @@
                 </div>
                 <div v-else>
                     奖励金额：<el-input-number v-model="editForm.avgMoney" style="width: 200px;"
-                                          :min="100" :max="100000" @blur="check"></el-input-number>元
+                                          :min="100" :max="1000000" @blur="check"></el-input-number>元
                     奖励人数：<el-input-number v-model="editForm.avgNumber" style="width: 200px;"
-                                          :min="1" :max="100" @blur="check"></el-input-number>人
+                                          :min="1"  @blur="check"></el-input-number>人
                 </div>
             </el-form-item>
 
@@ -108,16 +108,16 @@
             var checkPrizes = (rule, value, callback) => {
                 if (this.editForm.levelType === 'AVG') {
                     if (!this.editForm.avgMoney || !this.editForm.avgNumber){
-                        return callback(new Error('请输入奖学金金额和名额数量1'));
+                        return callback(new Error('请输入奖学金金额和名额数量'));
                     }
                 }else if (this.editForm.levelType === 'MULTI'){
                     if (this.editForm.prizes.length==0){
-                        return callback(new Error('请输入奖学金金额和名额数量2'));
+                        return callback(new Error('请输入奖学金金额和名额数量'));
                     }else {
                         for (let index in this.editForm.prizes){
                             let item = this.editForm.prizes[index]
                             if (!item.money || !item.number){
-                                return callback(new Error('请输入奖学金金额和名额数量3'));
+                                return callback(new Error('请输入奖学金金额和名额数量'));
                             }
                         }
                     }
@@ -133,6 +133,7 @@
                         {required: true, message: '请输入申请条件', trigger: 'blur', whitespace: true}
                     ],
                     templateId: [
+                        {required: true, message: '请选择奖学金类型模板'},
                         {validator: checkTemplate, trigger: 'change'}
                     ],
                     prizes: [
@@ -222,6 +223,7 @@
                 this.editForm.prizes = []
                 this.files = []
                 this.canAddLevel = true
+                this.editLoading = false
             },
             addLevelItemEdit: function () {
                 if (this.editForm.prizes.length < this.levelSizeLimit) {
@@ -245,6 +247,7 @@
                 }
             },
             editSubmit: function () {
+                this.editLoading = true
                 this.$refs['editScholarshipForm'].validate((valid) => {
                     if (valid) {
                         this.$confirm('确认提交修改吗？', '提示', {}).then(() => {
@@ -279,9 +282,14 @@
                             }).catch((error)=>{
                                 this.editLoading = false;
                             });
-                        }).catch(()=>{});
+                        }).catch(()=>{
+                            this.editLoading = false
+                        });
+                    } else {
+                        this.editLoading = false
                     }
                 });
+                this.editLoading = false
             }
         }
     }

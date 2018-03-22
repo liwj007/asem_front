@@ -13,7 +13,7 @@
                 <div v-if="active === 0">
                     <el-form :model="addForm" label-width="100px" ref="addForm">
                         <el-form-item label="分配奖项" prop="prizes">
-                            <el-select v-model="addForm.prizes" multiple placeholder="请选择" style="width: 500px;"
+                            <el-select v-model="addForm.prizes" multiple placeholder="请选择" style="width: 80%;"
                             @change="selectPrize">
                                 <el-option
                                         v-for="item in selectPrizes"

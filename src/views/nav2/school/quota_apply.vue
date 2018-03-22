@@ -81,14 +81,8 @@
                 sels: [],
                 currentPage: 1,
                 currentPageSize: 10,
-                tableData: [{
-                    college: 'xxx',
-                    name: 'xxx',
-                    allocationNum: 10,
-                    applyNum: 5,
-                    level: '一等奖'
-                }],
-                total: 1,
+                tableData: [],
+                total: 0,
                 listLoading: false,
             }
         },
@@ -140,7 +134,7 @@
             passBatch: function () {
                 let tmp = []
                 for (let index in this.sels){
-                    tmp.push(this.sels[index].id)
+                    tmp.push(this.sels[index])
                 }
                 let para = {
                     ids: tmp,
@@ -158,7 +152,7 @@
             rejectBatch: function () {
                 let tmp = []
                 for (let index in this.sels){
-                    tmp.push(this.sels[index].id)
+                    tmp.push(this.sels[index])
                 }
                 let para = {
                     ids: tmp,

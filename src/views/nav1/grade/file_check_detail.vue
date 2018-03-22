@@ -4,12 +4,11 @@
         <FixMajorSearchBar @search="search">
             <template slot="other">
                 <el-form-item>
-                    <el-select v-model="filters.status" style="width: 150px;">
-                        <el-option label="不限状态" value="0"></el-option>
+                    <el-select v-model="filters.status" style="width: 200px;">
+                        <el-option label="不限材料审核状态" value="0"></el-option>
                         <el-option label="审核中" value="1"></el-option>
-                        <el-option label="需修改" value="3"></el-option>
-                        <el-option label="重新提交" value="4"></el-option>
                         <el-option label="审核通过" value="2"></el-option>
+                        <el-option label="审核不通过" value="3"></el-option>
                     </el-select>
                 </el-form-item>
             </template>
@@ -20,7 +19,7 @@
             </el-table-column>
             <el-table-column type="index" width="70" label="序号">
                 <template scope="scope">
-                    {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
+                    {{(scope.$index + 1) + (currentPage - 1) * currentPageSize}}
                 </template>
             </el-table-column>
             <el-table-column prop="name" label="姓名">
@@ -87,11 +86,12 @@
         checkFileStatus
     } from '../../../api/api';
     import ApplicationInfoModal from '../../components/ApplicationInfoModal.vue'
-    import FixMajorSearchBar from  '../../components/FixMajorSearch.vue'
+    import FixMajorSearchBar from '../../components/FixMajorSearch.vue'
+
     export default {
         name: 'FileCheckDetail',
         props: ['itemId'],
-        components: {ApplicationInfoModal,FixMajorSearchBar},
+        components: {ApplicationInfoModal, FixMajorSearchBar},
         data() {
             return {
                 infoVisible: false,
@@ -113,17 +113,21 @@
             }
         },
         methods: {
-            canSelect: function (row,index) {
+            canSelect: function (row, index) {
                 return row.status === 'SUBMIT' || row.status === 'RESUBMIT'
             },
             checkFileStatus: function (result) {
-                this.$confirm('是否确认通过已选中学生的材料信息么？', '确认提醒 ', {
+                var tmp = '不通过'
+                if (result === 'PASS') {
+                    tmp = '通过'
+                }
+                this.$confirm('是否' + tmp + '已选中学生的材料信息么？', '确认提醒 ', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     let ids = []
-                    for (let index in this.sels){
+                    for (let index in this.sels) {
                         let item = this.sels[index]
                         ids.push(item.applicationId)
                     }

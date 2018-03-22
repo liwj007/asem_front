@@ -6,18 +6,16 @@
                     <el-select v-model="filters.fileStatus" style="width: 200px;">
                         <el-option label="不限材料审核状态" value="0"></el-option>
                         <el-option label="审核中" value="1"></el-option>
-                        <el-option label="需修改" value="3"></el-option>
-                        <el-option label="重新提交" value="4"></el-option>
                         <el-option label="审核通过" value="2"></el-option>
+                        <el-option label="审核不通过" value="3"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="filters.prizeStatus" style="width: 200px;">
                         <el-option label="不限获奖审核状态" value="0"></el-option>
-                        <el-option label="审核中" value="2"></el-option>
-                        <el-option label="带提交" value="1"></el-option>
-                        <el-option label="审核通过" value="3"></el-option>
-                        <el-option label="审核不通过" value="4"></el-option>
+                        <el-option label="审核中" value="1"></el-option>
+                        <el-option label="审核通过" value="2"></el-option>
+                        <el-option label="审核不通过" value="3"></el-option>
                     </el-select>
                 </el-form-item>
             </template>
@@ -53,12 +51,12 @@
                     </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column prop="fileStatus" label="材料提交状态">
+            <el-table-column prop="fileStatus" label="材料审核状态">
                 <template scope="scope">
-                    <span v-if="scope.row.fileStatus === 'SUBMIT'">已提交</span>
-                    <span v-else-if="scope.row.fileStatus === 'PASS'">已通过</span>
-                    <span v-else-if="scope.row.fileStatus === 'REJECT'">需修改</span>
-                    <span v-else-if="scope.row.fileStatus === 'RESUBMIT'">重新提交</span>
+                    <span v-if="scope.row.fileStatus === 'SUBMIT'">审核中</span>
+                    <span v-else-if="scope.row.fileStatus === 'PASS'">审核通过</span>
+                    <span v-else-if="scope.row.fileStatus === 'REJECT'">审核不通过</span>
+                    <span v-else-if="scope.row.fileStatus === 'RESUBMIT'">审核中</span>
                 </template>
             </el-table-column>
             <el-table-column prop="documents" label="申请材料">
@@ -68,12 +66,10 @@
             </el-table-column>
             <el-table-column prop="awardStatus" label="获奖审核状态">
                 <template scope="scope">
-                    <el-select v-model="scope.row.prizeStatus" size="small" :disabled="scope.row.prizeStatus !== 'SUBMIT'">
-                        <el-option label="审核中" value="SUBMIT"></el-option>
-                        <el-option label="通过" value="WAIT_PASS"></el-option>
-                        <el-option label="通过" value="PASS"></el-option>
-                        <el-option label="不通过" value="REJECT"></el-option>
-                    </el-select>
+                    <span v-if="scope.row.prizeStatus === 'SUBMIT'">审核中</span>
+                    <span v-else-if="scope.row.prizeStatus === 'PASS'">审核通过</span>
+                    <span v-else-if="scope.row.prizeStatus === 'WAIT_PASS'">审核通过</span>
+                    <span v-else-if="scope.row.prizeStatus === 'REJECT'">审核不通过</span>
                 </template>
             </el-table-column>
         </el-table>

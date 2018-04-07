@@ -17,14 +17,14 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
                     <span v-else>无</span>
                 </template>
@@ -38,7 +38,7 @@
             <el-table-column prop="endDate" label="审核截止日期">
             </el-table-column>
             <el-table-column label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="changeToDetail(scope.row)">获奖审核</el-button>
                 </template>
             </el-table-column>
@@ -96,7 +96,7 @@
                 this.getDatas()
             },
             changeToDetail(item) {
-                if (item.submitStatus === true) {
+                if (item.applyStatus === true) {
                     this.$confirm('此操作将锁定该奖学金，学生无法提交新的申请，并且年级辅导员将无法提交新的通过名单, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
@@ -133,6 +133,7 @@
         },
         mounted() {
             this.getDatas()
+            this.$emit('activeTab', '2');
         },
         created() {
             this.$emit('viewIn', [{

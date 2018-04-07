@@ -13,14 +13,14 @@
         <!--列表-->
         <el-table :data="dataList" v-loading="listLoading" style="width: 100%;">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称" sortable>
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
                     <span v-else>无</span>
                 </template>
@@ -32,13 +32,13 @@
             <el-table-column prop="money" label="金额" sortable>
             </el-table-column>
             <el-table-column prop="allocationStatus" label="名额分配" sortable>
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.allocationStatus===true">已分配</span>
                     <span v-else>未分配</span>
                 </template>
             </el-table-column>
             <el-table-column prop="timeStatus" label="评定时间" sortable>
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.timeStatus===true">已安排</span>
                     <span v-else>未安排</span>
                 </template>
@@ -46,7 +46,7 @@
             <!--<el-table-column prop="status" label="状态" sortable>-->
             <!--</el-table-column>-->
             <el-table-column label="操作" width="350">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button size="small" type="text" @click="handleDetail(scope.$index, scope.row)">查看
                     </el-button>
                     <el-button :disabled="scope.row.scholarshipType !=='COLLEGE'" size="small" type="text" @click="handleEdit(scope.$index, scope.row)">编辑
@@ -229,6 +229,8 @@
             }
         },
         mounted() {
+            this.$emit('activeTab', '1');
+
             this.getDatas();
         },
         created() {

@@ -28,14 +28,14 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%" >
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
                     <span v-else>无</span>
                 </template>
@@ -53,7 +53,7 @@
             <el-table-column prop="className" label="班级">
             </el-table-column>
             <el-table-column prop="records" label="获奖数">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-popover trigger="hover" placement="top">
                         <p v-for="item in scope.row.records">
                             {{item}}
@@ -65,7 +65,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="documents" label="申请材料">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showDetail(scope.row.applicationId)">查看</el-button>
                 </template>
             </el-table-column>
@@ -120,16 +120,22 @@
                     majorId: '0',
                     gradeId: '0',
                     classId: '0',
-                    scholarshipId: '',
-                    prizeId: ''
+                    scholarshipId: '0',
+                    prizeId: '0'
                 },
                 currentPage: 1,
                 currentPageSize: 10,
                 tableData: [],
                 total: 0,
                 listLoading: false,
-                scholarships: [],
-                prizes: []
+                scholarships: [{
+                    id: '0',
+                    name: '不限奖学金'
+                }],
+                prizes: [{
+                    id: '0',
+                    prizeName: '不限奖学金等级'
+                }]
             }
         },
         methods: {
@@ -184,10 +190,10 @@
                 getSchoolPublicityScholarshipList(para).then((res) => {
                     this.scholarships = res;
                     this.scholarships.splice(0, 0, {
-                        "id": 0,
+                        "id": '0',
                         "name": "不限奖学金"
                     })
-                    this.filters.scholarshipId = 0
+                    this.filters.scholarshipId = '0'
                 }).catch((error) => {
                     this.listLoading = false;
                 });
@@ -199,10 +205,10 @@
                 getPrizesByScholarship(para).then((res) => {
                     this.prizes = res;
                     this.prizes.splice(0, 0, {
-                        "id": 0,
+                        "id": '0',
                         "prizeName": "不限奖学金等级"
                     })
-                    this.filters.prizeId = 0
+                    this.filters.prizeId = '0'
                 }).catch((error) => {
                     this.listLoading = false;
                 });

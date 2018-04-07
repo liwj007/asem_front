@@ -1,13 +1,10 @@
 import Home from './views/Home.vue'
 
 import ComprehensiveEvaluation from './views/nav3/comprehensive_evaluation_readonly.vue'
-
 import ScholarshipApply from './views/nav1/student/scholarship_apply.vue'
-
 import Publicity from './views/nav1/student/publicity.vue'
 import PublicityScholarshipList from './views/nav1/student/publicity_scholarship_list.vue'
 import PublicityObjection from  './views/nav1/student/publicity_objection.vue'
-
 import WinningRecord from  './views/nav1/student/winning_record.vue'
 
 export default [
@@ -30,8 +27,7 @@ export default [
         iconCls: 'fa fa-address-card',
         children: [
             {path: 'evaluation', component: ComprehensiveEvaluation, name: '综合评测', right: []},
-            {path: 'winning_record', component: WinningRecord, name: '获奖记录', right: []},
-            // {path: 'message', component: Page6, name: '消息提醒', right: []}
+            {path: 'winning_record', component: WinningRecord, name: '获奖记录', right: []}
         ]
     }
 ]

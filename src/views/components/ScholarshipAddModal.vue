@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="添加奖项" v-model="addFormVisible" :close-on-click-modal="false"
+    <el-dialog title="添加奖项" :visible.sync="addFormVisible" :close-on-click-modal="false"
                :show-close="false" :close-on-press-escape="false"
                @close="cancelAdd" @open="getScholarTemplates">
         <el-form :model="addForm" label-width="200px" :rules="addFormRules" ref="addScholarshipForm">
@@ -38,7 +38,7 @@
             <el-form-item prop="prizes" >
                 <div v-if="addForm.levelType === 'MULTI'">
                     <el-form-item v-for="(item, index) in addForm.prizes" :key="index" style="padding-bottom: 5px;">
-                        <el-input v-model="item.prizeName" style="width: 100px;" :readonly="true"></el-input>
+                        <el-input v-model="item.prizeName" style="width: 100px;"></el-input>
                         奖励金额：
                         <el-input-number v-model.number="item.money" style="width: 200px;"
                                          :min="100" :max="1000000" @blur="check"></el-input-number>
@@ -226,7 +226,6 @@
                         return false;
                     }
                 });
-                this.addLoading = false
             },
             beforeUpload: function (file) {
                 for (let index in this.files) {
@@ -277,7 +276,13 @@
             },
             cancelAdd: function () {
                 this.$refs['addScholarshipForm'].resetFields()
-                this.addForm.prizes = []
+                this.addForm.prizes = [
+                    {
+                        prizeName: '一等奖',
+                        number: '0',
+                        money: '100'
+                    }
+                ]
                 this.files = []
                 this.addForm.levelType = 'MULTI'
                 this.addForm.templateId = ''

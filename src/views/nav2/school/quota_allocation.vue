@@ -16,14 +16,14 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{scope.row.prizeName===''?'无':scope.row.prizeName}}
                 </template>
             </el-table-column>
@@ -36,7 +36,7 @@
             <el-table-column prop="usedNumber" label="已分配名额">
             </el-table-column>
             <el-table-column label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="showInfo(scope.$index, scope.row)" type="text" size="small">查看</el-button>
                     <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="small"
                                :disabled="scope.row.status!=='新建'">编辑</el-button>
@@ -115,16 +115,7 @@
         },
         mounted() {
             this.getScholarships()
-            this.$emit('viewIn', [{
-                name: '名额分配',
-                url: '/school/quota/allocation'
-            }, {
-                name: '名额申请',
-                url: '/school/quota/apply'
-            }, {
-                name: '名额退回',
-                url: '/school/quota/back'
-            }]);
+            this.$emit('activeTab', '1');
         },
         created() {
             this.$emit('viewIn', [{

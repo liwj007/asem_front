@@ -18,7 +18,7 @@
             <el-table-column type="selection" width="50" :selectable="canSelect">
             </el-table-column>
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -33,7 +33,7 @@
             <el-table-column prop="className" label="班级">
             </el-table-column>
             <el-table-column prop="status" label="材料提交状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.status === 'SUBMIT'">已提交</span>
                     <span v-else-if="scope.row.status === 'PASS'">已提交</span>
                     <span v-else-if="scope.row.status === 'REJECT'">需修改</span>
@@ -41,12 +41,12 @@
                 </template>
             </el-table-column>
             <el-table-column prop="prizeId" label="申请材料">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showDetail(scope.row.applicationId)">查看</el-button>
                 </template>
             </el-table-column>
             <el-table-column label="材料审核状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.status === 'SUBMIT'">审核中</span>
                     <span v-else-if="scope.row.status === 'PASS'">审核通过</span>
                     <span v-else-if="scope.row.status === 'REJECT'">审核不通过</span>

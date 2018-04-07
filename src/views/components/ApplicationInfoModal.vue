@@ -1,8 +1,8 @@
 <template>
     <!--新增界面-->
-    <el-dialog title="申请详情" v-model="infoVisible" :close-on-click-modal="false" :show-close="false"
+    <el-dialog title="申请详情" :visible.sync="infoVisible" :close-on-click-modal="false" :show-close="false"
                :close-on-press-escape="false"
-               @close="closeModal" @open="openModal" size="tiny">
+               @close="closeModal" @open="openModal">
         <el-form :model="detail" label-width="100px" ref="addForm">
             <el-form-item label="申请奖学金">
                 <el-input v-model="detail.scholarshipName" style="width: 210px;" :readonly="true"></el-input>

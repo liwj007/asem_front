@@ -4,7 +4,7 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%" >
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -13,12 +13,12 @@
             <el-table-column prop="unitName" label="公示人">
             </el-table-column>
             <el-table-column prop="date" label="公示起止日期">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{scope.row.beginDate}}~~{{scope.row.endDate}}
                 </template>
             </el-table-column>
             <el-table-column prop="id" label="公示名单">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showDetail(scope.row.id)">查看</el-button>
                 </template>
             </el-table-column>
@@ -103,6 +103,7 @@
         },
         mounted() {
             this.getDatas()
+            this.$emit('activeTab', '1');
         }
     }
 

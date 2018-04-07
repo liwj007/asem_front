@@ -16,7 +16,7 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -27,8 +27,8 @@
             <el-table-column prop="collegeEndDate" label="学院截止提交时间">
             </el-table-column>
             <el-table-column label="操作">
-                <template scope="scope">
-                    <el-button type="text" size="small" @click="handleEdit(scope.row)" :disabled="scope.row.startTime < nowTime">编辑</el-button>
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="handleEdit(scope.row)" :disabled="new Date(scope.row.studentBeginDate).getTime() <= new Date().getTime()">编辑</el-button>
                     <!--<el-button type="text" size="small" style="color: red;">删除</el-button>-->
                 </template>
             </el-table-column>

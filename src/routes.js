@@ -13,11 +13,8 @@ let routes = [
     },
     {
         path: '/',
-        component: Home,
-        name: '欢迎',
-        children: [
-            {path: '/main', component: Main, hidden: true}
-            ]
+        component: Main,
+        name: '欢迎'
     },
     {
         path: '/404',

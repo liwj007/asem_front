@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="奖学金详情" v-model="detailVisible" @close="closeDetail" @open="getDetail"
+    <el-dialog title="奖学金详情" :visible.sync="detailVisible" @close="closeDetail" @open="getDetail"
                :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
         <el-form :model="detail" label-width="100px" ref="addScholarshipForm">
             <el-form-item label="奖学金名称" prop="name">

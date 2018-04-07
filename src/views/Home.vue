@@ -1,6 +1,6 @@
 <template>
-    <el-row class="container">
-        <el-row class="header">
+    <el-container class="container">
+        <el-header class="header">
             <el-col class="logo">
                 <img src='../assets/logo.png' alt='logo'>
                 <div class='txt'>
@@ -27,12 +27,11 @@
                             class="el-icon-circle-close"></i></el-button>
                 </el-tooltip>
             </el-col>
-        </el-row>
+        </el-header>
 
-        <el-col :span="24" class="main">
-            <aside class='menu-expanded'>
-                <!--导航菜单-->
-                <el-menu mode="vertical" class="el-menu-vertical-demo" router
+        <el-container class="main-cnt">
+            <el-aside  class='menu-expanded' style="width: 230px">
+                <el-menu mode="vertical" style="height: 100%;" router
                          theme="dark">
                     <!--<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">-->
                     <template v-for="(item,index) in $store.state.menus" v-if="!item.hidden">
@@ -46,20 +45,20 @@
                         </el-menu-item-group>
                     </template>
                 </el-menu>
-            </aside>
+            </el-aside>
 
-            <section class="content-container">
-                <div>
-                    <el-menu default-active="1" class="el-menu-demo sub-header" mode="horizontal" @select="">
-                        <template v-for="(item,index) in subHeaders">
-                            <el-menu-item :index="''+(index+1)" @click="$router.push(item.url)">{{item.name}}
-                            </el-menu-item>
-                        </template>
 
-                    </el-menu>
-                </div>
-                <section class="main-content">
-                    <div class="grid-content bg-purple-light">
+            <el-main class="main-content">
+                <el-menu :default-active="activeTab" class="sub-header" mode="horizontal" @select="">
+                    <template v-for="(item,index) in subHeaders">
+                        <el-menu-item :index="''+(index+1)" @click="$router.push(item.url)">{{item.name}}
+                        </el-menu-item>
+                    </template>
+                </el-menu>
+
+
+                <transition name="fade" mode="out-in">
+                    <section class="content">
                         <el-row class="breadcrumb-container" style="padding-bottom: 20px;">
                             <el-breadcrumb separator=">" class="breadcrumb-inner">
                                 <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
@@ -67,17 +66,14 @@
                                 </el-breadcrumb-item>
                             </el-breadcrumb>
                         </el-row>
-                        <el-row class="content-wrapper">
-                            <transition name="fade" mode="out-in">
-                                <router-view @viewIn="changeSubHeaders"></router-view>
-                            </transition>
-                        </el-row>
-                    </div>
-                </section>
+                        <router-view @viewIn="changeSubHeaders" @activeTab="changeActiveTab"></router-view>
+                    </section>
+                </transition>
 
-            </section>
-        </el-col>
-    </el-row>
+            </el-main>
+        </el-container>
+
+    </el-container>
 </template>
 
 <script>
@@ -86,8 +82,17 @@
     import {
         getManageColleges
     } from '../api/api';
+    import ElContainer from "../../node_modules/element-ui/packages/container/src/main.vue";
+    import ElHeader from "../../node_modules/element-ui/packages/header/src/main.vue";
+    import ElAside from "../../node_modules/element-ui/packages/aside/src/main.vue";
+    import ElMain from "../../node_modules/element-ui/packages/main/src/main.vue";
 
     export default {
+        components: {
+            ElMain,
+            ElAside,
+            ElHeader,
+            ElContainer},
         data() {
             return {
                 subHeaders: [],
@@ -96,7 +101,8 @@
                 sysUserName: '',
                 sysUserType: '',
                 sysUserTypeName: '',
-                manageUnit: ''
+                manageUnit: '',
+                activeTab: '1'
             }
         },
         methods: {
@@ -106,6 +112,9 @@
             },
             changeSubHeaders(val) {
                 this.subHeaders = val
+            },
+            changeActiveTab(val){
+                this.activeTab = val
             },
             //退出登录
             logout: function () {
@@ -120,18 +129,19 @@
         },
         beforeMount() {
             var user = sessionStorage.getItem('user');
+            console.log(user)
             if (user) {
                 user = JSON.parse(user);
                 this.sysUserName = user.name || ''
-                if (user.userType === 'SCHOOL_USER') {
+                if (user.userType === 'SCHOOL') {
                     this.sysUserTypeName = '学校用户'
                 } else if (user.userType === 'STUDENT') {
                     this.sysUserTypeName = '学生用户'
-                } else if (user.userType === 'SPECIAL_ADVISER') {
+                } else if (user.userType === 'COLLEGE') {
                     this.sysUserTypeName = '专项辅导员'
-                    this.$store.commit('SET_MANAGE_UNITS', user.managePrimaryTeachingInstitutions)
+                    this.$store.commit('SET_MANAGE_UNITS', user.manageColleges)
                     this.$store.commit('SET_MANAGE_UNIT', parseInt(sessionStorage.getItem("manageUnit")))
-                } else if (user.userType === 'GRADE_ADVISER') {
+                } else if (user.userType === 'GRADE') {
                     this.sysUserTypeName = '年级辅导员'
 //                    this.$store.commit('SET_MANAGE_UNITS', user.manageGrades)
 //                    this.$store.commit('SET_MANAGE_UNIT', parseInt(sessionStorage.getItem("manageUnit")))
@@ -141,6 +151,8 @@
 
                 this.manageUnit = parseInt(sessionStorage.getItem("manageUnit"))
             }
+
+
         },
         created() {
             Bus.$on('showError', data => {
@@ -165,204 +177,141 @@
 </script>
 
 <style lang="scss">
+    .clear{ clear:both}
+    .main-cnt{
+        margin-top: 0;
+        height: 100%;
+    }
     .sub-header {
         background-color: white;
         border-bottom: 1px solid #d1dbe5;
-        position: absolute;
-        top: 0px;
+        position: fixed;
+        /*top: 60px;*/
         width: 100%;
         z-index: 999;
     }
 
-    .page-tool {
-        padding: 10px 0;
-    }
-
-    .el-menu-item {
-        height: 40px;
-        line-height: 40px;
-    }
-
-    .main-content {
-        margin: 20px 30px;
-        padding: 20px;
-        height: 100%;
-        background-color: #fff;
-        position: relative;
-        top: 60px;
-        /*width: 100%;*/
-    }
-</style>
-
-<style scoped lang="scss">
-    @import '~scss_vars';
-
-    .container {
-        position: absolute;
-        top: 0px;
-        bottom: 0px;
+    .header {
+        position: fixed;
         width: 100%;
-        .header {
+        left: 0;
+        top: 0;
+        z-index: 1500;
+        height: 60px;
+        line-height: 60px;
+        background: white;
+        border-bottom: 1px solid #d2d2d2;
+        color: #fff;
+        padding: 0;
+        .userinfo {
+            text-align: right;
+            box-sizing: border-box;
+            padding-right: 35px;
+            width: 500px;
+            float: right;
+            .userinfo-inner {
+                color: #000000;
+                img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 20px;
+                    margin: 10px 0px 10px 10px;
+                    float: right;
+                }
+            }
+        }
+        .logo {
+            width: 229px;
+            float: left;
+            box-sizing: border-box;
+            background-color: #20303C;
+
+            height: 60px;
+            font-size: 22px;
+            padding-left: 20px;
+            padding-right: 20px;
+            img {
+                width: 35px;
+                float: left;
+                margin: 15px 10px 10px 0px;
+            }
+            .txt {
+                color: #fff;
+                margin: 15px 0 10px 0;
+                p {
+                    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+                    font-size: 12px;
+                    margin: 0;
+                    line-height: 20px;
+                }
+            }
+        }
+        .welcome {
+            width: 400px;
+            float: left;
+            box-sizing: border-box;
+            color: #000000;
+            height: 60px;
+            font-size: 22px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .logo-width {
+            width: 230px;
+        }
+        .logo-collapse-width {
+            width: 60px
+        }
+        .tools {
+            padding: 0px 23px;
+            width: 14px;
             height: 60px;
             line-height: 60px;
-            background: white;
-            border-bottom: 1px solid #d2d2d2;
-            color: #fff;
-            .userinfo {
-                text-align: right;
-                box-sizing: border-box;
-                padding-right: 35px;
-                width: 500px;
-                float: right;
-                .userinfo-inner {
-                    color: #000000;
-                    img {
-                        width: 40px;
-                        height: 40px;
-                        border-radius: 20px;
-                        margin: 10px 0px 10px 10px;
-                        float: right;
-                    }
-                }
-            }
-            .logo {
-                width: 230px;
-                float: left;
-                box-sizing: border-box;
-                background-color: #20303C;
-
-                height: 60px;
-                font-size: 22px;
-                padding-left: 20px;
-                padding-right: 20px;
-                img {
-                    width: 35px;
-                    float: left;
-                    margin: 15px 10px 10px 0px;
-                }
-                .txt {
-                    color: #fff;
-                    margin: 15px 0 10px 0;
-                    p {
-                        font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
-                        font-size: 12px;
-                        margin: 0;
-                        line-height: 20px;
-                    }
-                }
-            }
-            .welcome {
-                width: 400px;
-                float: left;
-                box-sizing: border-box;
-                color: #000000;
-                height: 60px;
-                font-size: 22px;
-                padding-left: 20px;
-                padding-right: 20px;
-            }
-            .logo-width {
-                width: 230px;
-            }
-            .logo-collapse-width {
-                width: 60px
-            }
-            .tools {
-                padding: 0px 23px;
-                width: 14px;
-                height: 60px;
-                line-height: 60px;
-                cursor: pointer;
-            }
+            cursor: pointer;
         }
-        .main {
-            display: flex;
-            // background: #324057;
-            position: absolute;
-            top: 60px;
-            bottom: 0px;
-            overflow: hidden;
-            aside {
-                flex: 0 0 230px;
-                width: 230px;
-                // position: absolute;
-                // top: 0px;
-                // bottom: 0px;
-                .el-menu {
-                    height: 100%;
-                }
+    }
 
-                .collapsed {
-                    width: 60px;
-                    .item {
-                        position: relative;
-                    }
-                    .submenu {
-                        position: absolute;
-                        top: 0px;
-                        left: 60px;
-                        z-index: 99999;
-                        height: auto;
-                        display: none;
-                    }
-
-                }
-            }
-            .menu-collapsed {
-                flex: 0 0 60px;
-                width: 60px;
-            }
-            .menu-expanded {
-                flex: 0 0 230px;
-                width: 230px;
-                height: 100%;
-
-                .el-menu {
-                    background-color: #20303C;
-                }
-
-                .el-menu-item {
-                    color: #ffffff;
-                    :hover {
-                        background-color: #3ebcf4 !important;
-                    }
-
-                }
-                .is-active {
-                    background-color: #3ebcf4;
-                }
-
-                .el-menu-item:first-child {
-                    margin-top: 12px;
-                }
-            }
-
-            .content-container {
-                background: #f1f2f7;
-                flex: 1;
-                // position: absolute;
-                // right: 0px;
-                // top: 0px;
-                // bottom: 0px;
-                // left: 230px;
-                overflow-y: scroll;
-                /*padding: 20px;*/
-                .breadcrumb-container {
-                    //margin-bottom: 15px;
-                    .title {
-                        width: 200px;
-                        float: left;
-                        color: #475669;
-                    }
-                    .breadcrumb-inner {
-                        float: left;
-                    }
-                }
-                .content-wrapper {
-                    background-color: #fff;
-                    box-sizing: border-box;
-                }
-            }
+    .menu-expanded {
+        padding: 60px 0 0 0;
+        flex: 0 0 230px;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        overflow: hidden;
+        .el-menu {
+            padding-top: 20px;
+            background-color: #20303C;
         }
+
+        .el-menu-item {
+            color: #ffffff;
+            :hover {
+                background-color: #3ebcf4 !important;
+            }
+
+        }
+        .is-active {
+            background-color: #3ebcf4;
+        }
+    }
+    .main-content {
+       padding-left: 230px;
+        padding-top: 60px;
+    }
+
+    .breadcrumb-container {
+        .title {
+            width: 200px;
+            float: left;
+            color: #475669;
+        }
+        .breadcrumb-inner {
+            float: left;
+        }
+    }
+    .content{
+        margin-top: 60px;
+        padding: 20px;
     }
 </style>

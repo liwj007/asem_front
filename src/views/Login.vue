@@ -8,6 +8,14 @@
         <el-form-item prop="checkPass">
             <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
         </el-form-item>
+        <el-form-item>
+            <el-radio-group v-model="ruleForm2.type">
+                <el-radio label="1">学生</el-radio>
+                <el-radio label="３">学校用户</el-radio>
+                <el-radio label="4">年级辅导员</el-radio>
+                <el-radio label="5">学院用户</el-radio>
+            </el-radio-group>
+        </el-form-item>
         <!--<el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>-->
         <el-form-item style="width:100%;">
             <el-button type="primary" style="width:100%;" @click="handleSubmit2" :loading="logining">登录
@@ -30,12 +38,12 @@
                 logining: false,
                 ruleForm2: {
                     account: '',
-                    checkPass: ''
+                    checkPass: '',
+                    type: '1'
                 },
                 rules2: {
                     account: [
                         {required: true, message: '请输入账号', trigger: 'blur'},
-                        //{ validator: validaePass }
                     ],
                     checkPass: [
                         {required: true, message: '请输入密码', trigger: 'blur'},
@@ -49,27 +57,29 @@
                 this.$refs.ruleForm2.resetFields();
             },
             handleSubmit2(ev) {
-//                this.$router.push({path: '/manage'});
                 var _this = this;
                 this.$refs.ruleForm2.validate((valid) => {
                     if (valid) {
                         this.logining = true;
-                        var loginParams = {username: this.ruleForm2.account, password: this.ruleForm2.checkPass};
-//                        sessionStorage.setItem('user', JSON.stringify(user));
+                        var loginParams = {
+                            username: _this.Trim(this.ruleForm2.account),
+                            password: this.ruleForm2.checkPass,
+                            type: this.ruleForm2.type
+                        };
                         userLogin(loginParams).then(res => {
                             this.logining = false;
                             let user = res
                             sessionStorage.setItem('user', JSON.stringify(user));
 
                             if (user !== null) {
-                                if (user.userType === 'SCHOOL_USER') {
+                                if (user.userType === 'SCHOOL') {
                                     this.$store.commit('SET_MENU',School)
                                     this.$router.addRoutes(School)
-                                } else if (user.userType === 'SPECIAL_ADVISER') {
-                                    this.$store.commit('SET_MANAGE_UNITS', user.managePrimaryTeachingInstitutions)
-                                    if (user.managePrimaryTeachingInstitutions.length>0){
-                                        sessionStorage.setItem('manageUnit',user.managePrimaryTeachingInstitutions[0].id)
-                                        this.$store.commit('SET_MANAGE_UNIT', user.managePrimaryTeachingInstitutions[0].id)
+                                } else if (user.userType === 'COLLEGE') {
+                                    this.$store.commit('SET_MANAGE_UNITS', user.manageColleges)
+                                    if (user.manageColleges.length>0){
+                                        sessionStorage.setItem('manageUnit',user.manageColleges[0].id)
+                                        this.$store.commit('SET_MANAGE_UNIT', user.manageColleges[0].id)
                                     }
                                     this.$store.commit('SET_MENU',College)
                                     this.$router.addRoutes(College)
@@ -79,17 +89,16 @@
                                 }else if (user.userType === 'STUDENT'){
                                     this.$store.commit('SET_MENU',Student)
                                     this.$router.addRoutes(Student)
-                                }else if (user.userType === 'GRADE_ADVISER'){
-//                                    this.$store.commit('SET_MANAGE_UNITS', user.manageGrades)
-//                                    if (user.manageGrades.length>0){
-//                                        sessionStorage.setItem('manageUnit',user.manageGrades[0].id)
-//                                        this.$store.commit('SET_MANAGE_UNIT', user.manageGrades[0].id)
-//                                    }
+                                }else if (user.userType === 'GRADE'){
+                                    if (user.manageColleges.length>0){
+                                        sessionStorage.setItem('manageUnit',user.manageColleges[0].id)
+                                        this.$store.commit('SET_MANAGE_UNIT', user.manageColleges[0].id)
+                                    }
                                     this.$store.commit('SET_MENU',Grade)
                                     this.$router.addRoutes(Grade)
                                 }
                             }
-                            this.$router.push({path: '/main'});
+                            this.$router.push({path: '/'});
                         }).catch((error)=>{
                             this.logining = false;
                             this.$message({
@@ -102,6 +111,13 @@
                         return false;
                     }
                 });
+            },
+            Trim: function(str,is_global)
+            {
+                var result;
+                result = str.replace(/(^\s+)|(\s+$)/g,"");
+                result = result.replace(/\s/g,"");
+                return result;
             }
         }
     }
@@ -116,7 +132,7 @@
         -moz-border-radius: 5px;
         background-clip: padding-box;
         margin: 180px auto;
-        width: 350px;
+        width: 400px;
         padding: 35px 35px 15px 35px;
         background: #fff;
         border: 1px solid #eaeaea;

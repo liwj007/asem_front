@@ -10,7 +10,7 @@
 
         <el-table :data="tableData" stripe style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -19,12 +19,12 @@
             <el-table-column prop="typeName" label="类型">
             </el-table-column>
             <el-table-column prop="date" label="创建日期">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{formatDate(scope.row.date)}}
                 </template>
             </el-table-column>
             <el-table-column label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button @click="handleDetail(scope.row)" type="text" size="small">查看</el-button>
                     <el-button type="text" size="small" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
@@ -45,7 +45,7 @@
 
 
         <!--新增界面-->
-        <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false" size="tiny">
+        <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
             <div style="min-height: 260px;">
                 <el-row type="flex" class="row-bg" justify="center">
                     <el-col :span="13">
@@ -83,9 +83,9 @@
                                 <el-form-item label="该环节审核人员：">
                                     <el-checkbox v-model="newForm.gradeInstructor" disabled>年级辅导员</el-checkbox>
                                     <br/>
-                                    <el-checkbox v-model="newForm.gradeStudent" :disabled="!newForm.needGradeCheck">
-                                        学生工作助理（管年级）
-                                    </el-checkbox>
+                                    <!--<el-checkbox v-model="newForm.gradeStudent" :disabled="!newForm.needGradeCheck">-->
+                                        <!--学生工作助理（管年级）-->
+                                    <!--</el-checkbox>-->
                                 </el-form-item>
                             </el-form>
                         </div>
@@ -93,8 +93,8 @@
                             <el-form ref="form3" :model="newForm" label-width="140px">
                                 <el-form-item label="该环节审核人员：" prop="specialInstructor">
                                     <el-checkbox v-model="newForm.specialInstructor" disabled>专项辅导员</el-checkbox>
-                                    <br/>
-                                    <el-checkbox v-model="newForm.collegeStudent">学生工作助理（管学院）</el-checkbox>
+                                    <!--<br/>-->
+                                    <!--<el-checkbox v-model="newForm.collegeStudent">学生工作助理（管学院）</el-checkbox>-->
                                 </el-form-item>
                             </el-form>
                         </div>
@@ -118,7 +118,7 @@
         </el-dialog>
 
         <!--详情界面-->
-        <el-dialog title="模板详情" v-model="detailVisible" :close-on-click-modal="false" size="tiny">
+        <el-dialog title="模板详情" :visible.sync="detailVisible" >
             <div style="min-height: 260px;">
                 <el-form ref="form" :model="detailForm" label-width="170px">
                     <el-form-item label="奖学金类型：">
@@ -306,6 +306,7 @@
         },
         mounted() {
             this.getDatas()
+            this.$emit('activeTab', '1');
         },
         created() {
             this.$emit('viewIn', [{

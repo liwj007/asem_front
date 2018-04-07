@@ -15,14 +15,14 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
                     <span v-else>无</span>
                 </template>
@@ -34,7 +34,7 @@
             <el-table-column prop="reSubmitNumber" label="提交修改材料人数">
             </el-table-column>
             <el-table-column label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="changeToDetail(scope.row.prizeId)">审核材料
                     </el-button>
                 </template>
@@ -111,6 +111,7 @@
         },
         mounted() {
             this.getDatas()
+            this.$emit('activeTab', '1');
         },
         created() {
             this.$emit('viewIn', [{

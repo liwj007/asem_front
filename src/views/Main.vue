@@ -6,18 +6,18 @@
 
 <script>
 	export default {
-	    mounted() {
+	    created() {
             var user = sessionStorage.getItem('user');
             user = JSON.parse(user);
-            if (user.userType === 'SCHOOL_USER') {
+            if (user.userType === 'SCHOOL') {
                 this.$router.push('/school/manage')
-			} else if (user.userType === 'SPECIAL_ADVISER') {
+			} else if (user.userType === 'COLLEGE') {
                 this.$router.push('/college/manage')
             }else if (user.userType === 'ADMIN') {
                 this.$router.push('/admin/basic_setting')
             }else if (user.userType === 'STUDENT') {
                 this.$router.push('/student/apply')
-            }else if (user.userType === 'GRADE_ADVISER') {
+            }else if (user.userType === 'GRADE') {
                 this.$router.push('/scholarship/application_check')
             }
         }

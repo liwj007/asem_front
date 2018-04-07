@@ -1,15 +1,15 @@
 <template>
-    <el-dialog title="名额分配" v-model="formVisible" :close-on-click-modal="false"
+    <el-dialog width="70%" title="名额分配" :visible.sync="formVisible" :close-on-click-modal="false"
                :show-close="false" :close-on-press-escape="false"
                @close="cancelAdd" @open="getSelections">
         <el-row style="min-height: 300px;">
-            <el-col :span="4" :offset="1">
+            <el-col :span="5" :offset="1">
                 <el-steps :space="150" :active="active" finish-status="success" direction="vertical">
                     <el-step title="分配规则确认"></el-step>
                     <el-step title="分配名额调整"></el-step>
                 </el-steps>
             </el-col>
-            <el-col :span="19">
+            <el-col :span="18">
                 <div v-if="active === 0">
                     <el-form :model="addForm" label-width="100px" ref="addForm">
                         <el-form-item label="分配奖项" prop="prizes">
@@ -42,16 +42,16 @@
                     </el-form>
                 </div>
                 <div v-else-if="active === 1">
-                    <el-table :data="tmpData" stripe style="width: 100%">
+                    <el-table :data="tmpData" stripe >
                         <el-table-column type="index" width="70" label="序号">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                             </template>
                         </el-table-column>
                         <el-table-column prop="scholarshipName" label="奖学金名称">
                         </el-table-column>
                         <el-table-column prop="prizeName" label="等级">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
                                 <span v-else>无</span>
                             </template>
@@ -61,8 +61,8 @@
                         <el-table-column prop="unitName" label="年级"
                                          v-else-if="allocationMethod === 'GRADE'">
                         </el-table-column>
-                        <el-table-column prop="number" label="分配名额(候选)">
-                            <template scope="scope">
+                        <el-table-column prop="number" label="分配名额(候选)"  width="180">
+                            <template slot-scope="scope">
                                 <el-input-number size="small" v-model="scope.row.number" :step="1" :min="0"
                                                  :max="scope.row.max"></el-input-number>
                             </template>
@@ -70,12 +70,12 @@
                     </el-table>
                     <!--工具条-->
                     <el-row type="flex" class="page-tool" justify="center">
-                        <el-col :span="12">
+                        <el-col>
                             <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrentChange"
                                     :current-page="currentPage"
-                                    :page-sizes="[currentPageSize]"
+                                    :page-sizes="[5]"
                                     :page-size="currentPageSize"
                                     layout="total, sizes, prev, pager, next, jumper"
                                     :total="total">
@@ -88,7 +88,7 @@
 
         <div slot="footer" class="dialog-footer">
             <el-button style="margin-top: 12px;" @click.native="active = 0" :disabled="active === 0">上一步</el-button>
-            <el-button style="margin-top: 12px;" @click="nextStep" :disabled="active === 1 || this.addForm.prizes.length<=0 ">下一步</el-button>
+            <el-button style="margin-top: 12px;" @click="nextStep" :loading="loadingUnits" :disabled="active === 1 || this.addForm.prizes.length<=0 ">下一步</el-button>
             <el-button @click="closeModal">取消</el-button>
             <el-button type="primary" @click="addSubmit" :loading="addLoading" :disabled="active === 0">提交
             </el-button>
@@ -139,7 +139,8 @@
                 allocationData: [],
                 tmpData: [],
                 prizesMap: {},
-                addLoading: false
+                addLoading: false,
+                loadingUnits: false
             }
         },
         methods: {
@@ -177,10 +178,11 @@
                     this.currentPage * this.currentPageSize)
             },
             nextStep: function () {
-                this.active = 1
+                this.loadingUnits = true
                 this.allocationData = []
                 getUnitForAllocation({
-                    type: this.unitType
+                    type: this.unitType,
+                    collegeId: this.getManageUnit
                 }).then((res) => {
                     let units = res
                     for (let index in this.addForm.prizes) {
@@ -231,11 +233,14 @@
                         }
 
                     }
-                    this.currentPage = 0
+                    this.currentPage = 1
                     this.total = this.allocationData.length
                     this.tmpData = this.allocationData.slice(0, 5)
-
-                }).catch(()=>{});
+                    this.active = 1
+                    this.loadingUnits=false
+                }).catch(()=>{
+                    this.loadingUnits=false
+                });
             },
             addSubmit: function () {
                 let list = []

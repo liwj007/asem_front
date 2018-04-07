@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="名额分配" v-model="editFormVisible"  @close="closeModal" @open="getDetail"
+    <el-dialog title="名额分配" :visible.sync="editFormVisible"  @close="closeModal" @open="getDetail"
                :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
         <el-row style="min-height: 300px;">
             <el-form :model="detail" label-width="100px" ref="editForm">
@@ -27,14 +27,14 @@
             </el-form>
             <el-table :data="detail.tableData" stripe style="width: 100%">
                 <el-table-column type="index" width="70" label="序号">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="unitName" label="学院">
                 </el-table-column>
                 <el-table-column prop="number" label="分配名额(候选)">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-input-number size="small" v-model="scope.row.number" :step="1" :min="0"
                                          :max="scope.row.max">
                         </el-input-number>
@@ -43,7 +43,7 @@
             </el-table>
             <!--工具条-->
             <el-row type="flex" class="page-tool" justify="center">
-                <el-col :span="12">
+                <el-col>
                     <el-pagination
                             @current-change="handleInfoCurrentChange"
                             :current-page="currentPage"

@@ -1,6 +1,6 @@
 <template>
-    <el-dialog title="评定时间" v-model="addFormVisible" @close="closeModal" @open="getData"
-               :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" size="tiny">
+    <el-dialog title="评定时间" :visible.sync="addFormVisible" @close="closeModal" @open="getData"
+               :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
         <el-row>
             <el-col :span="24">
                 <el-form :model="addForm" label-width="150px" ref="addForm">

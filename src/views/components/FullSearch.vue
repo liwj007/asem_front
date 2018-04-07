@@ -72,10 +72,22 @@
                     gradeId: '0',
                     classId: '0'
                 },
-                colleges: [],
-                majors: [],
-                grades: [],
-                classes: []
+                colleges: [{
+                    "id" : '0',
+                    "name" : "不限学院"
+                }],
+                majors: [{
+                    "id" : '0',
+                    "name" : "不限专业"
+                }],
+                grades: [{
+                    "id" : '0',
+                    "name" : "不限年级"
+                }],
+                classes: [{
+                    "id" : '0',
+                    "name" : "不限班级"
+                }]
             }
         },
         methods: {
@@ -83,10 +95,10 @@
                 getColleges().then((res) => {
                     this.colleges = res;
                     this.colleges.splice(0,0,{
-                        "id" : 0,
+                        "id" : '0',
                         "name" : "不限学院"
                     })
-                    this.filters.collegeId = 0
+                    this.filters.collegeId = '0'
                 }).catch((error)=>{
                 });
             },
@@ -97,10 +109,10 @@
                 getMajorsByCollege(para).then((res) => {
                     this.majors = res;
                     this.majors.splice(0,0,{
-                        "id" : 0,
+                        "id" : '0',
                         "name" : "不限专业"
                     })
-                    this.filters.majorId = 0
+                    this.filters.majorId = '0'
                 }).catch((error)=>{
                 });
             },
@@ -111,10 +123,10 @@
                 getGradesByMajor(para).then((res) => {
                     this.grades = res;
                     this.grades.splice(0,0,{
-                        "id" : 0,
+                        "id" : '0',
                         "name" : "不限年级"
                     })
-                    this.filters.gradeId = 0
+                    this.filters.gradeId = '0'
                 }).catch((error)=>{
                 });
             },
@@ -126,10 +138,10 @@
                 getClassByGradeAndMajor(para).then((res) => {
                     this.classes = res;
                     this.classes.splice(0,0,{
-                        "id" : 0,
+                        "id" : '0',
                         "name" : "不限班级"
                     })
-                    this.filters.classId = 0
+                    this.filters.classId = '0'
                 }).catch((error)=>{
                 });
             },

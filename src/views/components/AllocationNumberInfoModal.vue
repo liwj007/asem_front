@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="名额分配" v-model="detailVisible" @close="closeDetail" @open="getDetail"
+    <el-dialog title="名额分配" :visible.sync="detailVisible" @close="closeDetail" @open="getDetail"
                :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
         <el-row style="min-height: 300px;">
             <el-form :model="detail" label-width="100px">
@@ -26,7 +26,7 @@
             </el-form>
             <el-table :data="detail.tableData" stripe style="width: 100%">
                 <el-table-column type="index" width="70" label="序号">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                     </template>
                 </el-table-column>

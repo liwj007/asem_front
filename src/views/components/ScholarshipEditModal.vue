@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="编辑奖项" v-model="editFormVisible" :close-on-click-modal="false"
+    <el-dialog title="编辑奖项" :visible.sync="editFormVisible" :close-on-click-modal="false"
                :show-close="false" :close-on-press-escape="false"
                @close="cancelEdit" @open="initData" >
         <el-form :model="editForm" label-width="200px" :rules="addFormRules" ref="editScholarshipForm">
@@ -46,7 +46,7 @@
             <el-form-item  prop="prizes">
                 <div v-if="editForm.levelType === 'MULTI'">
                     <el-form-item v-for="(item, index) in editForm.prizes" :key="index" style="padding-bottom: 5px;">
-                        <el-input v-model="item.prizeName" style="width: 100px;" :readonly="true"></el-input>
+                        <el-input v-model="item.prizeName" style="width: 100px;" ></el-input>
                         奖励金额：<el-input-number v-model.number="item.money" style="width: 200px;"
                                               :min="1" :max="1000000" @blur="check"></el-input-number>元
                         奖励人数：<el-input-number v-model.number="item.number" style="width: 200px;"

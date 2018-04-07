@@ -1,7 +1,7 @@
 <template>
     <!--更新-->
-    <el-dialog title="评定时间" v-model="editFormVisible" @close="closeModal" @open="getDetail"
-               :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" size="tiny">
+    <el-dialog title="评定时间" :visible.sync="editFormVisible" @close="closeModal" @open="getDetail"
+               :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
         <el-row>
             <el-col :span="24">
                 <el-form :model="addForm" label-width="150px" ref="addForm">

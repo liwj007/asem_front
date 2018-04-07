@@ -13,7 +13,7 @@
                         <el-table-column prop="name" label="年级名称">
                         </el-table-column>
                         <el-table-column label="操作">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-button type="text" size="small" @click="deleteOrganization(scope.row.id, 'grade')">
                                     删除
                                 </el-button>
@@ -34,7 +34,7 @@
                         <el-table-column prop="name" label="学院名称">
                         </el-table-column>
                         <el-table-column label="操作">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-button type="text" size="small"
                                            @click="deleteOrganization(scope.row.id, 'college')">删除
                                 </el-button>
@@ -60,7 +60,7 @@
                         <el-table-column prop="gradeName" label="年级">
                         </el-table-column>
                         <el-table-column label="操作">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-button type="text" size="small" @click="deleteOrganization(scope.row.id, 'major')">
                                     删除
                                 </el-button>
@@ -88,7 +88,7 @@
                         <el-table-column prop="majorName" label="专业">
                         </el-table-column>
                         <el-table-column label="操作">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <el-button type="text" size="small" @click="deleteOrganization(scope.row.id, 'class')">
                                     删除
                                 </el-button>
@@ -100,7 +100,7 @@
             </el-col>
         </el-row>
 
-        <el-dialog title="新建专业" :visible.sync="majorFormVisible" size="tiny">
+        <el-dialog title="新建专业" :visible.sync="majorFormVisible">
             <el-form :model="form" label-width="100px" ref="majorForm">
                 <el-form-item label="年级" prop="gradeId">
                     <el-select v-model="form.gradeId">
@@ -125,7 +125,7 @@
         </el-dialog>
 
 
-        <el-dialog title="新建班级" :visible.sync="classFormVisible" size="tiny">
+        <el-dialog title="新建班级" :visible.sync="classFormVisible">
             <el-form :model="form" label-width="100px" ref="classForm">
                 <el-form-item label="年级" prop="gradeId">
                     <el-select v-model="form.gradeId" @change="loadSelectMajors">

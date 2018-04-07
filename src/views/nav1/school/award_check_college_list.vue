@@ -21,7 +21,7 @@
 
         <el-table :data="tableData"  v-loading="listLoading" stripe  style="width: 100%" >
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -34,8 +34,8 @@
             <el-table-column prop="usedNumber" label="已用名额" >
             </el-table-column>
             <el-table-column label="操作">
-                <template scope="scope">
-                    <el-button type="text" size="small" @click="changeToDetail(scope.row.prizeId, scope.row.unitId)">审核材料
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @click="changeToDetail(scope.row)">获奖审核
                     </el-button>
                 </template>
             </el-table-column>
@@ -60,6 +60,7 @@
 
 <script>
     import {
+        closeSubmit,
         getCollegePrizeForAwardCheck
     } from '../../../api/api';
     export default {
@@ -86,8 +87,26 @@
                 this.currentPageSize  = val
                 this.getDatas()
             },
-            changeToDetail(val, unitId) {
-                this.$router.push('/school/check/award/detail/' + val + '/' + unitId)
+            changeToDetail(item) {
+                if (item.submitStatus === true) {
+                    this.$confirm('此操作将锁定该学院的此项奖学金，学院用户及专项辅导员将无法提交新的通过名单, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        let para = {
+                            id: item.prizeId,
+                            unitId: item.unitId
+                        };
+                        closeSubmit(para).then((res) => {
+                            this.$router.push('/school/check/award/detail/' + item.prizeId + '/' + item.unitId)
+                        }).catch((error)=>{
+                        });
+                    }).catch(() => {
+                    });
+                }else {
+                    this.$router.push('/school/check/award/detail/' + item.prizeId + '/' + item.unitId)
+                }
             },
             getDatas() {
                 let para = {

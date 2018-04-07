@@ -17,7 +17,7 @@
             <el-table-column type="selection" width="55"  :selectable="canSelect">
             </el-table-column>
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -26,7 +26,7 @@
             <el-table-column  prop="scholarshipName" label="奖学金名称"  >
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{scope.row.prizeName===''?'无':scope.row.prizeName}}
                 </template>
             </el-table-column>
@@ -35,7 +35,7 @@
             <el-table-column prop="applyNumber" label="申请名额" >
             </el-table-column>
             <el-table-column  label="申请审核状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <template v-if="scope.row.status === '申请中'">
                         <el-button type="text" size="small" @click="pass(scope.row.id)">通过</el-button>
                         <el-button type="text" size="small" style="color:red;" @click="reject(scope.row.id)">不通过</el-button>
@@ -90,8 +90,11 @@
             canSelect: function (row,index) {
                 return row.status === '申请中'
             },
-            selsChange: function (sels) {
-                this.sels = sels;
+            selsChange: function (items) {
+                this.sels = []
+                for (let index in items){
+                    this.sels.push(items[index].id)
+                }
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
@@ -102,70 +105,72 @@
                 this.getData()
             },
             pass(id) {
+                this.sels = [id]
+                this.passBatch()
+            },
+            reject(id) {
+                this.sels = [id]
+                this.rejectBatch()
+            },
+            passBatch: function () {
                 this.$confirm('是否确认通过学院名额申请？', '确认提醒 ', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.sels = [id]
-                    this.passBatch()
+                    let tmp = []
+                    for (let index in this.sels){
+                        tmp.push(this.sels[index])
+                    }
+                    let para = {
+                        ids: tmp,
+                        result: 'PASS'
+                    }
+                    checkQuotaApply(para).then((res) => {
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                        this.sels = []
+                        this.getData()
+                    }).catch((error)=>{});
                 }).catch(() => {
+                    this.sels = []
                     this.$message({
                         type: 'info',
                         message: '操作已取消'
                     });
                 });
             },
-            reject(id) {
+            rejectBatch: function () {
                 this.$confirm('是否确认不通过学院申请？', '确认提醒 ', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.sels = [id]
-                    this.rejectBatch()
+                    let tmp = []
+                    for (let index in this.sels){
+                        tmp.push(this.sels[index])
+                    }
+                    let para = {
+                        ids: tmp,
+                        result: 'REJECT'
+                    }
+                    checkQuotaApply(para).then((res) => {
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功'
+                        });
+                        this.sels = []
+                        this.getData()
+                    }).catch((error)=>{});
                 }).catch(() => {
+                    this.sels = []
                     this.$message({
                         type: 'info',
                         message: '操作已取消'
                     });
                 });
-            },
-            passBatch: function () {
-                let tmp = []
-                for (let index in this.sels){
-                    tmp.push(this.sels[index])
-                }
-                let para = {
-                    ids: tmp,
-                    result: 'PASS'
-                }
-                checkQuotaApply(para).then((res) => {
-                    this.$message({
-                        type: 'success',
-                        message: '操作成功'
-                    });
-                    this.sels = []
-                    this.getData()
-                }).catch((error)=>{});
-            },
-            rejectBatch: function () {
-                let tmp = []
-                for (let index in this.sels){
-                    tmp.push(this.sels[index])
-                }
-                let para = {
-                    ids: tmp,
-                    result: 'REJECT'
-                }
-                checkQuotaApply(para).then((res) => {
-                    this.$message({
-                        type: 'success',
-                        message: '操作成功'
-                    });
-                    this.sels = []
-                    this.getData()
-                }).catch((error)=>{});
             },
             getData: function () {
                 let para = {
@@ -184,7 +189,20 @@
         },
         mounted() {
             this.getData()
-        }
+            this.$emit('activeTab', '2');
+        },
+        created() {
+            this.$emit('viewIn', [{
+                name: '名额分配',
+                url: '/school/quota/allocation'
+            }, {
+                name: '名额申请',
+                url: '/school/quota/apply'
+            }, {
+                name: '名额退回',
+                url: '/school/quota/back'
+            }]);
+        },
     }
 
 </script>

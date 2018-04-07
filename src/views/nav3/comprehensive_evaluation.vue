@@ -55,7 +55,7 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -87,9 +87,9 @@
             </el-pagination>
         </el-col>
 
-        <el-dialog title="上传综合评测文件" v-model="addFormVisible" :close-on-click-modal="false"
+        <el-dialog title="上传综合评测文件" :visible.sync="addFormVisible" :close-on-click-modal="false"
                    :show-close="false" :close-on-press-escape="false"
-                   @close="cancelAdd" size="tiny">
+                   @close="cancelAdd">
             <el-form label-width="130px">
                 <el-form-item label="上传文件">
                     <el-upload ref="uploadComp"
@@ -132,14 +132,26 @@
             return {
                 filters: {
                     year: '',
-                    collegeId: '',
-                    majorId: '',
-                    gradeId: ''
+                    collegeId: '0',
+                    majorId: '0',
+                    gradeId: '0'
                 },
-                years: [],
-                colleges: [],
-                majors: [],
-                grades: [],
+                years: [{
+                    "id" : '0',
+                    "name" : "不限学年"
+                }],
+                colleges: [{
+                    "id" : '0',
+                    "name" : "不限学院"
+                }],
+                majors: [{
+                    "id" : '0',
+                    "name" : "不限专业"
+                }],
+                grades: [{
+                    "id" : '0',
+                    "name" : "不限年级"
+                }],
                 currentPage: 1,
                 currentPageSize: 10,
                 tableData: [],
@@ -232,10 +244,10 @@
                 getColleges().then((res) => {
                     this.colleges = res;
                     this.colleges.splice(0,0,{
-                        "id" : 0,
+                        "id" : '0',
                         "name" : "不限学院"
                     })
-                    this.filters.collegeId = 0
+                    this.filters.collegeId = '0'
                 }).catch((error)=>{
                 });
             },
@@ -246,10 +258,10 @@
                 getMajorsByCollege(para).then((res) => {
                     this.majors = res;
                     this.majors.splice(0,0,{
-                        "id" : 0,
+                        "id" : '0',
                         "name" : "不限专业"
                     })
-                    this.filters.majorId = 0
+                    this.filters.majorId = '0'
                 }).catch((error)=>{
                 });
             },
@@ -260,10 +272,10 @@
                 getGradesByMajor(para).then((res) => {
                     this.grades = res;
                     this.grades.splice(0,0,{
-                        "id" : 0,
+                        "id" : '0',
                         "name" : "不限年级"
                     })
-                    this.filters.gradeId = 0
+                    this.filters.gradeId = '0'
                 }).catch((error)=>{
                 });
             }
@@ -275,6 +287,7 @@
             }]);
         },
         mounted() {
+            this.$emit('activeTab', '1');
             getYearSelections().then((res) => {
                 this.years = res;
                 if (this.years.length>0) {

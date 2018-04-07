@@ -5,14 +5,11 @@ import Setting from './views/nav3/setting.vue'
 import ComprehensiveEvaluation from './views/nav3/comprehensive_evaluation.vue'
 import EvaluationTime from './views/nav2/school/evaluation_time.vue'
 
-
-
 import FileCheck from './views/nav1/school/file_check'
 import FileCheckDetail from './views/nav1/school/file_check_detail'
 import AwardCheck from './views/nav1/school/award_check'
 import AwardCheckDetail from './views/nav1/school/award_check_detail'
 import AwardCheckCollegeList from './views/nav1/school/award_check_college_list'
-
 
 import QuotaAllocation from './views/nav2/school/quota_allocation'
 import QuotaApply from './views/nav2/school/quota_apply'
@@ -70,7 +67,6 @@ export default [
             {path: 'evaluation', component: ComprehensiveEvaluation, name: '综合评测', right: []},
             {path: 'winning_record', component: WinningRecord, name: '获奖记录', right: []},
             {path: 'winning_record_detail/:id', component: WinningRecordDetail, name: '获奖记录详情', hidden: true},
-            // {path: 'message', component: Page6, name: '消息提醒', right: []},
             {path: 'setting', component: Setting, name: '初始设置', right: ['SCHOOL']}
         ]
     }

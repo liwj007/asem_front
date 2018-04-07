@@ -16,7 +16,7 @@
 
         <el-table :data="tableData"  v-loading="listLoading" stripe  style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -27,19 +27,19 @@
             <el-table-column  prop="studentEndDate" label="学生截止申请时间"  >
             </el-table-column>
             <el-table-column  prop="gradeEndDate" label="年级截止申请时间"  >
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.gradeEndDate === null">无</span>
                     <span v-else>{{scope.row.gradeEndDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column prop="collegeEndDate" label="学院截止提交时间" >
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.collegeEndDate === null">无</span>
                     <span v-else>{{scope.row.collegeEndDate}}</span>
                 </template>
             </el-table-column>
             <el-table-column  label="操作">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
                     <!--<el-button type="text" size="small" style="color: red;">删除</el-button>-->
                 </template>

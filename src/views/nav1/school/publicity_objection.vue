@@ -6,18 +6,19 @@
             <ul class="objection" v-for="item in tableData">
                 <li>
                     <el-row class="head">
-                        <el-col :span="1">{{item.name}}</el-col>
-                        <el-col :span="2">{{item.sn}}</el-col>
-                        <el-col :span="2">{{item.collegeName}}</el-col>
-                        <el-col :span="2">{{item.majorName}}</el-col>
-                        <el-col :span="2">{{item.gradeName}}</el-col>
-                        <el-col :span="3">{{item.className}}</el-col>
-                        <el-col :span="3" :offset="8">{{item.createTime}}</el-col>
+                        <el-col :span="5">{{item.name}} {{item.sn}}</el-col>
+
+                        <el-col :span="10">{{item.collegeName}} {{item.majorName}} {{item.gradeName}}级</el-col>
+
+                        <!--<el-col :span="2">{{item.gradeName}}</el-col>-->
+                        <!--<el-col :span="3">{{item.className}}</el-col>-->
+                        <el-col :span="5" :offset="2">{{item.createTime}}</el-col>
                         <el-col :span="1">
                             <el-button type="text" @click="addObjection(item.id)" v-if="item.feedback===null">处理</el-button>
                             <el-button type="text" @click="showFeedback(item.feedback)" v-else>查看</el-button>
                         </el-col>
                     </el-row>
+
                     <el-row>
                         <p>{{item.content}}</p>
                     </el-row>
@@ -38,7 +39,7 @@
             </el-pagination>
         </el-col>
 
-        <el-dialog title="异议处理" v-model="formVisible" @close="closeModal" size="tiny">
+        <el-dialog title="异议处理" v-model="formVisible" @close="closeModal">
             <el-form :model="addForm" ref="addForm">
                 <el-form-item label="处理意见" prop="name">
                     <el-input v-model="addForm.content" type="textarea" :maxlength="200" placeholder="200字以内" :rows="5" :readonly="!edit"></el-input>
@@ -146,10 +147,17 @@
 
         },
         created() {
-
+            this.$emit('viewIn',[{
+                name: '奖学金公示',
+                url: '/school/publicity_list'
+            },{
+                name: '异议反馈',
+                url: '/school/publicity_objection'
+            }]);
         },
         mounted() {
             this.getDatas()
+            this.$emit('activeTab', '2');
         }
     }
 

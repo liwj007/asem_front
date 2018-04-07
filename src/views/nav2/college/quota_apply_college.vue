@@ -18,14 +18,14 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称">
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
                     <span v-else>无</span>
                 </template>
@@ -52,7 +52,7 @@
 
 
         <!--名额分配-->
-        <el-dialog title="申请名额" v-model="addFormVisible" :close-on-click-modal="false" @close="" size="tiny">
+        <el-dialog title="申请名额" :visible.sync="addFormVisible" :close-on-click-modal="false" @close="">
             <el-form :model="addForm"  ref="addForm">
                 <el-form-item v-for="(item, index) in addForm.options" :key="index">
                     <el-select v-model="item.scholarshipId" placeholder="奖学金名称"  style="width: 170px"
@@ -222,7 +222,21 @@
                 });
             }
         },
+        created() {
+            this.$emit('viewIn', [{
+                name: '名额分配',
+                url: '/college/quota_college/allocation'
+            }, {
+                name: '名额申请',
+                url: '/college/quota_college/apply'
+            }, {
+                name: '名额退回',
+                url: '/college/quota_college/back'
+            }]);
+        },
         mounted() {
+            this.$emit('activeTab', '2');
+
             this.getDatas()
         }
     }

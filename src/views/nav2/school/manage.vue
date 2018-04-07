@@ -12,17 +12,17 @@
 
         <!--列表-->
         <el-table :data="dataList" v-loading="listLoading" style="width: 100%;" @selection-change="selsChange">
-            <el-table-column type="selection" width="50">
+            <el-table-column type="selection" width="50" :selectable="canSelect">
             </el-table-column>
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
             <el-table-column prop="scholarshipName" label="奖学金名称" sortable>
             </el-table-column>
             <el-table-column prop="prizeName" label="等级">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.prizeName!==''">{{scope.row.prizeName}}</span>
                     <span v-else>无</span>
                 </template>
@@ -34,13 +34,13 @@
             <el-table-column prop="money" label="金额" sortable>
             </el-table-column>
             <el-table-column prop="allocationStatus" label="名额分配" sortable>
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.allocationStatus===true">已分配</span>
                     <span v-else>未分配</span>
                 </template>
             </el-table-column>
             <el-table-column prop="timeStatus" label="评定时间" sortable>
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.timeStatus===true">已安排</span>
                     <span v-else>未安排</span>
                 </template>
@@ -48,7 +48,7 @@
             <el-table-column prop="status" label="状态" sortable>
             </el-table-column>
             <el-table-column label="操作" width="350">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button size="small" type="text" @click="handleDetail(scope.$index, scope.row)">查看</el-button>
                     <el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)" :disabled="scope.row.status !== '新建'">编辑</el-button>
                     <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)" :disabled="scope.row.status !== '新建'">删除</el-button>
@@ -129,6 +129,13 @@
             }
         },
         methods: {
+            canSelect: function (row,index) {
+                if(row.status === '新建'){
+                    return true
+                }else{
+                    return false
+                }
+            },
             successSubmit: function () {
                 this.getScholarships()
                 this.addFormVisible = false
@@ -263,6 +270,7 @@
         },
         mounted() {
             this.getScholarships();
+            this.$emit('activeTab', '1');
         },
         created() {
             this.$emit('viewIn', [{

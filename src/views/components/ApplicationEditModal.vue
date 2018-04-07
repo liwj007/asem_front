@@ -1,12 +1,12 @@
 <template>
     <!--新增界面-->
-    <el-dialog title="材料修改" v-model="editVisible" :close-on-click-modal="false" :show-close="false"
+    <el-dialog title="材料修改" :visible.sync="editVisible" :close-on-click-modal="false" :show-close="false"
                :close-on-press-escape="false"
-               @close="closeModal" @open="openModal" size="tiny">
+               @close="closeModal" @open="openModal">
         <el-form :model="detail" label-width="100px" ref="addForm" :rules="formRules">
             <el-form-item label="申请奖学金">
                 <el-input v-model="detail.scholarshipName" style="width: 210px;" :readonly="true"></el-input>
-                <el-input v-model="detail.prizeName" style="width: 210px;" :readonly="true"></el-input>
+                <el-input v-model="detail.prizeName===''?'无':detail.prizeName" style="width: 210px;" :readonly="true"></el-input>
             </el-form-item>
 
             <el-form-item label="综合评测" prop="name">
@@ -64,14 +64,15 @@
         name: 'ApplicationEditModal',
         props: ['editVisible', 'id'],
         data() {
+            let _this = this;
             var checkReasons = (rule, value, callback) => {
                 if (this.detail.reasons.length == 0) {
                     return callback(new Error('请输入至少一条申请理由'));
                 } else {
                     for (let index in this.detail.reasons) {
                         let item = this.detail.reasons[index]
-                        if (!item.reason) {
-                            return callback(new Error('申请理由不能为空'));
+                        if (!item.reason || _this.Trim(item.reason)==='') {
+                            return callback(new Error('申请理由不能为空或全部输入空格'));
                         }
                     }
                 }
@@ -207,6 +208,13 @@
                     }],
                     files: []
                 }
+            },
+            Trim: function(str,is_global)
+            {
+                var result;
+                result = str.replace(/(^\s+)|(\s+$)/g,"");
+                result = result.replace(/\s/g,"");
+                return result;
             }
 
         }

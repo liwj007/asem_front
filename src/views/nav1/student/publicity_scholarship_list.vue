@@ -11,7 +11,7 @@
 
         <el-table :data="tableData" v-loading="listLoading" stripe style="width: 100%">
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -20,12 +20,12 @@
             <el-table-column prop="unitName" label="公示人">
             </el-table-column>
             <el-table-column prop="date" label="公示起止日期">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{scope.row.beginDate}}~~{{scope.row.endDate}}
                 </template>
             </el-table-column>
             <el-table-column prop="id" label="公示名单">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showDetail(scope.row.id)">查看</el-button>
                 </template>
             </el-table-column>
@@ -44,7 +44,7 @@
             </el-pagination>
         </el-col>
 
-        <el-dialog title="提出异议" v-model="formVisible" @close="closeModal" size="tiny">
+        <el-dialog title="提出异议" v-model="formVisible" @close="closeModal">
             <el-form :model="addForm" label-width="100px" ref="addForm">
                 <el-form-item label="相关奖项" prop="prizes">
                     <el-select v-model="addForm.publicityId" placeholder="请选择" style=" width: 100%;">
@@ -169,6 +169,7 @@
             }]);
         },
         mounted() {
+            this.$emit('activeTab', '1');
             this.getDatas()
         }
     }

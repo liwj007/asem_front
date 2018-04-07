@@ -3,7 +3,10 @@ import store from '../vuex/store'
 import Bus from '../bus'
 
 let base = 'http://127.0.0.1:8080/asem';
-// let base = 'http://117.48.200.107:8080/asem_serv';
+export const uploadFileURL = 'http://127.0.0.1:8080/asem/files/upload'
+// let base = 'http://118.24.171.158:8080/asem';
+// export const uploadFileURL = 'http://118.24.171.158:8080/asem/files/upload'
+
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = base
@@ -38,7 +41,7 @@ axios.interceptors.response.use(
 
 let querystring = require('querystring')
 
-export const uploadFileURL = 'http://127.0.0.1:8080/asem/files/upload'
+
 
 
 export const createOrganization = params => {

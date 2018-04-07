@@ -25,7 +25,7 @@
             <el-table-column type="selection" width="50" :selectable="canSelect">
             </el-table-column>
             <el-table-column type="index" width="70" label="序号">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{(scope.$index+1)+ (currentPage -1) * currentPageSize}}
                 </template>
             </el-table-column>
@@ -40,7 +40,7 @@
             <el-table-column prop="className" label="班级">
             </el-table-column>
             <el-table-column prop="records" label="申请记录">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-popover trigger="hover" placement="top">
                         <p v-for="item in scope.row.records">
                             {{item}}
@@ -52,7 +52,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="fileStatus" label="材料审核状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.fileStatus === 'SUBMIT'">审核中</span>
                     <span v-else-if="scope.row.fileStatus === 'PASS'">审核通过</span>
                     <span v-else-if="scope.row.fileStatus === 'REJECT'">审核不通过</span>
@@ -60,12 +60,12 @@
                 </template>
             </el-table-column>
             <el-table-column prop="documents" label="申请材料">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button type="text" size="small" @click="showDetail(scope.row.applicationId)">查看</el-button>
                 </template>
             </el-table-column>
             <el-table-column prop="awardStatus" label="获奖审核状态">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <span v-if="scope.row.prizeStatus === 'SUBMIT'">审核中</span>
                     <span v-else-if="scope.row.prizeStatus === 'PASS'">审核通过</span>
                     <span v-else-if="scope.row.prizeStatus === 'WAIT_PASS'">审核通过</span>

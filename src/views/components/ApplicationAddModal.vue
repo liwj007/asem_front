@@ -1,16 +1,16 @@
 <template>
     <!--新增界面-->
-    <el-dialog title="提交申请" v-model="addFormVisible" :close-on-click-modal="false" :show-close="false"
+    <el-dialog title="提交申请" :visible.sync="addFormVisible" :close-on-click-modal="false" :show-close="false"
                :close-on-press-escape="false"
-               @close="closeModal" @open="openModal" size="tiny">
+               @close="closeModal" @open="openModal" >
         <el-form :model="addForm" label-width="100px" ref="addForm" :rules="addFormRules">
             <el-form-item v-for="(item, index) in sels" :key="index" label="申请奖学金">
-                <el-input v-model="item.scholarshipName" style="width: 210px;" :readonly="true"></el-input>
-                <el-input v-model="item.prizeName===''?'无':item.prizeName" style="width: 210px;" :readonly="true"></el-input>
+                <el-input v-model="item.scholarshipName" style="width: 45%;" :readonly="true"></el-input>
+                <el-input v-model="item.prizeName===''?'无':item.prizeName" style="width: 45%;" :readonly="true"></el-input>
             </el-form-item>
 
             <el-form-item label="综合评测" prop="evaluation">
-                <el-input v-model="addForm.evaluation" type="textarea" :maxlength="200" :rows="4"></el-input>
+                <el-input v-model="addForm.evaluation" type="textarea" :maxlength="200" :rows="4" style="width: 90%;"></el-input>
             </el-form-item>
 
             <el-form-item label="证明材料">
@@ -28,7 +28,7 @@
             </el-form-item>
             <el-form-item prop="reasons" label="申请理由">
                 <div v-for="(item, index) in addForm.reasons" :key="index" style="padding-bottom: 10px;">
-                    <el-input v-model="item.reason" style="width: 350px;" :maxlength="100"
+                    <el-input v-model="item.reason" style="width: 90%;" :maxlength="100"
                               placeholder="100字以内"></el-input>
                     <el-button @click.prevent="removeItem(item)" :disabled="addForm.reasons.length===1">删除</el-button>
                 </div>
@@ -51,10 +51,8 @@
         createApplication,
         getMyselfEvaluation
     } from '../../api/api';
-    import ElFormItem from "../../../node_modules/element-ui/packages/form/src/form-item.vue";
 
     export default {
-        components: {ElFormItem},
         name: 'ApplicationAddModal',
         props: ['addFormVisible', 'sels'],
         computed: {
@@ -182,14 +180,14 @@
                             evaluation: this.addForm.evaluation,
                             reasons: this.addForm.reasons
                         }
-//                        createApplication(para).then((res) => {
-//                            this.$message({
-//                                message: '创建成功',
-//                                type: 'success'
-//                            });
-//                            this.$emit('created');
-//                        }).catch((error) => {
-//                        });
+                        createApplication(para).then((res) => {
+                            this.$message({
+                                message: '申请成功',
+                                type: 'success'
+                            });
+                            this.$emit('created');
+                        }).catch((error) => {
+                        });
                     } else {
                         return false
                     }

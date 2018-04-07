@@ -39,7 +39,7 @@
         getManageGrades,
         getManageClassByGrade
     } from '../../api/api';
-
+    import {mapGetters} from 'vuex'
     export default {
         name: 'FixMajorSearchBar',
         props: [],
@@ -58,6 +58,11 @@
                 classes: []
             }
         },
+        computed: {
+            ...mapGetters([
+                'getManageUnit'
+            ])
+        },
         methods: {
             loadGrades: function () {
                 getManageGrades().then((res) => {
@@ -72,7 +77,8 @@
             },
             loadClasses: function () {
                 let para = {
-                    gradeId: this.filters.gradeId
+                    gradeId: this.filters.gradeId,
+                    collegeId: this.getManageUnit
                 }
                 getManageClassByGrade(para).then((res) => {
                     this.classes = res;

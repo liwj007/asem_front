@@ -12,7 +12,7 @@
                 欢迎登录{{sysName}}
             </el-col>
             <el-col class="userinfo">
-                <el-select v-model="manageUnit" v-if="$store.state.manageUnits.length>0"
+                <el-select v-model="manageUnit" v-if="sysUserTypeName === '学院用户'"
                            placeholder="请选择" size="small" style="width:120px;" @change="changeManageCollege">
                     <el-option
                             v-for="item in $store.state.manageUnits"
@@ -138,13 +138,13 @@
                 } else if (user.userType === 'STUDENT') {
                     this.sysUserTypeName = '学生用户'
                 } else if (user.userType === 'COLLEGE') {
-                    this.sysUserTypeName = '专项辅导员'
+                    this.sysUserTypeName = '学院用户'
                     this.$store.commit('SET_MANAGE_UNITS', user.manageColleges)
                     this.$store.commit('SET_MANAGE_UNIT', parseInt(sessionStorage.getItem("manageUnit")))
                 } else if (user.userType === 'GRADE') {
                     this.sysUserTypeName = '年级辅导员'
-//                    this.$store.commit('SET_MANAGE_UNITS', user.manageGrades)
-//                    this.$store.commit('SET_MANAGE_UNIT', parseInt(sessionStorage.getItem("manageUnit")))
+                    this.$store.commit('SET_MANAGE_UNITS', user.manageColleges)
+                    this.$store.commit('SET_MANAGE_UNIT', parseInt(sessionStorage.getItem("manageUnit")))
                 } else if (user.userType === 'ADMIN') {
                     this.sysUserTypeName = '管理员'
                 }

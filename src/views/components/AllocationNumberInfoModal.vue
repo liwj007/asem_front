@@ -67,10 +67,11 @@
         data() {
             return {
                 detail: {
+                    scholarshipName: '正在读取中，请稍等......',
                     list:[]
                 },
                 currentPage: 1,
-                currentPageSize: 10
+                currentPageSize: 5
             }
         },
         methods: {
@@ -90,6 +91,7 @@
             },
             closeDetail: function () {
                 this.detail = {
+                    scholarshipName: '正在读取中，请稍等......',
                     list:[]
                 }
             },

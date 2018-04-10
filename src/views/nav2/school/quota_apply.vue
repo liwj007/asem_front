@@ -37,7 +37,7 @@
             <el-table-column  label="申请审核状态">
                 <template slot-scope="scope">
                     <template v-if="scope.row.status === '申请中'">
-                        <el-button type="text" size="small" @click="pass(scope.row.id)">通过</el-button>
+                        <el-button type="text" size="small" @click="pass(scope.row)">通过</el-button>
                         <el-button type="text" size="small" style="color:red;" @click="reject(scope.row.id)">不通过</el-button>
                     </template>
                     <template v-else>
@@ -63,18 +63,36 @@
         </el-col>
 
 
+        <el-dialog title="确认申请名额" :visible.sync="singlePassVisible"
+                   :close-on-click-modal="false" :show-close="false"
+                   :close-on-press-escape="false"
+                   @close="closeModal">
+            <el-form :model="singleForm" label-width="100px" ref="singleForm" >
+                <el-form-item label="名额数量" prop="number">
+                    <el-input-number v-model="singleForm.number"  :min="1" :max="singleForm.max" ></el-input-number>
+                </el-form-item>
+
+
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelPass">取消</el-button>
+                <el-button type="primary" @click="addSubmit" :loading="passLoading">提交</el-button>
+            </div>
+        </el-dialog>
     </section>
 </template>
 
 <script>
     import {
         getAllQuotaApplyList,
-        checkQuotaApply
+        checkQuotaApply,
+        checkSingleQuotaApply
     } from '../../../api/api';
     export default {
         name: 'QuotaApply',
         data() {
             return {
+                passLoading: false,
                 filters: {
                     name: ''
                 },
@@ -84,9 +102,37 @@
                 tableData: [],
                 total: 0,
                 listLoading: false,
+                singlePassVisible: false,
+                singleForm: {
+                    id: '',
+                    number: 0,
+                    max: 0
+                }
             }
         },
         methods: {
+            closeModal: function () {
+                this.singleForm.id = ''
+                this.singleForm.number = 0
+                this.singleForm.max = 0
+            },
+            cancelPass: function () {
+                this.singlePassVisible = false
+            },
+            addSubmit: function () {
+                let para = {
+                    id: this.singleForm.id,
+                    number: this.singleForm.number
+                }
+                checkSingleQuotaApply(para).then((res) => {
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功'
+                    });
+                    this.singlePassVisible = false
+                    this.getData()
+                }).catch((error)=>{});
+            },
             canSelect: function (row,index) {
                 return row.status === '申请中'
             },
@@ -104,9 +150,11 @@
                 this.currentPageSize  = val
                 this.getData()
             },
-            pass(id) {
-                this.sels = [id]
-                this.passBatch()
+            pass(item) {
+                this.singleForm.id = item.id
+                this.singleForm.number = item.applyNumber
+                this.singleForm.max = item.applyNumber
+                this.singlePassVisible = true
             },
             reject(id) {
                 this.sels = [id]

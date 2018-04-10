@@ -54,8 +54,14 @@
                 },
                 colleges: [],
                 majors: [],
-                grades: [],
-                classes: []
+                grades: [{
+                    "id": '0',
+                    "name": "不限年级"
+                }],
+                classes: [{
+                    "id": '0',
+                    "name": "不限班级"
+                }]
             }
         },
         computed: {
@@ -68,10 +74,10 @@
                 getManageGrades().then((res) => {
                     this.grades = res;
                     this.grades.splice(0, 0, {
-                        "id": 0,
+                        "id": '0',
                         "name": "不限年级"
                     })
-                    this.filters.gradeId = 0
+                    this.filters.gradeId = '0'
                 }).catch((error) => {
                 });
             },
@@ -83,10 +89,10 @@
                 getManageClassByGrade(para).then((res) => {
                     this.classes = res;
                     this.classes.splice(0, 0, {
-                        "id": 0,
+                        "id": '0',
                         "name": "不限班级"
                     })
-                    this.filters.classId = 0
+                    this.filters.classId = '0'
                 }).catch((error) => {
                 });
             },

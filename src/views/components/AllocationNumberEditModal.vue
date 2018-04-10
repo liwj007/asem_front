@@ -73,6 +73,7 @@
         data() {
             return {
                 detail: {
+                    scholarshipName: '正在读取中，请稍等......',
                     list: []
                 },
                 currentPage: 1,
@@ -98,6 +99,7 @@
             },
             closeModal: function () {
                 this.detail = {
+                    scholarshipName: '正在读取中，请稍等......',
                     list:[]
                 }
             },

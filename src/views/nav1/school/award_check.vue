@@ -63,8 +63,7 @@
 
 <script>
     import {
-        getAwardCheckList,
-        closeSubmit
+        getAwardCheckList
     } from '../../../api/api';
     import {mapGetters} from 'vuex'
     export default {

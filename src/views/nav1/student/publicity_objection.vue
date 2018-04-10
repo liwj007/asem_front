@@ -37,7 +37,7 @@
             </el-pagination>
         </el-col>
 
-        <el-dialog title="异议处理" v-model="formVisible" @close="closeModal">
+        <el-dialog title="异议处理" :visible.sync="formVisible" @close="closeModal">
             <el-form :model="addForm" ref="addForm">
                 <el-form-item label="处理意见" prop="name">
                     <el-input v-model="addForm.content" type="textarea" :rows="5" :readonly="true"></el-input>

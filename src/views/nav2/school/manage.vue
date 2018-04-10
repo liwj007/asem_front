@@ -249,7 +249,7 @@
                 });
             },
             closeScholarships: function (index, row) {
-                this.$confirm('确认关闭该奖学金吗?', '提示', {
+                this.$confirm('确认关闭该奖学金吗?关闭奖学金将只保留奖学金公示及获奖记录信息，其他信息将全部中断！！', '提示', {
                     type: 'warning'
                 }).then(() => {
                     let para = {

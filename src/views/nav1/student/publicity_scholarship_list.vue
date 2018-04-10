@@ -4,7 +4,7 @@
         <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-form :inline="true">
                 <el-form-item>
-                    <el-button type="primary" @click="addObjection">提出异议</el-button>
+                    <el-button type="primary" @click="openObjection">提出异议</el-button>
                 </el-form-item>
             </el-form>
         </el-col>
@@ -44,7 +44,7 @@
             </el-pagination>
         </el-col>
 
-        <el-dialog title="提出异议" v-model="formVisible" @close="closeModal">
+        <el-dialog title="提出异议" :visible.sync="formVisible" @close="closeModal">
             <el-form :model="addForm" label-width="100px" ref="addForm">
                 <el-form-item label="相关奖项" prop="prizes">
                     <el-select v-model="addForm.publicityId" placeholder="请选择" style=" width: 100%;">
@@ -103,7 +103,7 @@
             }
         },
         methods: {
-            addObjection: function () {
+            openObjection: function () {
                 getAllStudentMangePublicityList().then((res) => {
                     this.publicityList = res;
                 }).catch((error) => {

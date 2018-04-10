@@ -97,14 +97,7 @@
                 this.getDatas()
             },
             changeToDetail(item) {
-                let para = {
-                    id: item.prizeId,
-                };
-                closeSubmit(para).then((res) => {
-                    this.$router.push('/scholarship/check/award/detail/' + item.prizeId)
-                }).catch((error) => {
-                    this.listLoading = false;
-                });
+                this.$router.push('/scholarship/check/award/detail/' + item.prizeId)
             },
             getDatas() {
                 let para = {

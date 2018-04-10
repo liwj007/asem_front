@@ -50,7 +50,7 @@
 
 
         <!--名额分配-->
-        <el-dialog title="退回名额" v-model="addFormVisible" :close-on-click-modal="false" @close="">
+        <el-dialog title="退回名额" :visible.sync="addFormVisible" :close-on-click-modal="false" @close="">
             <el-form :model="addForm"  ref="addForm">
                 <el-form-item v-for="(item, index) in addForm.options" :key="index">
                     <el-select v-model="item.scholarshipId" placeholder="奖学金名称"  style="width: 170px"

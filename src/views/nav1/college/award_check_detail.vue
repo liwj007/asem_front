@@ -91,7 +91,7 @@
         </el-col>
 
 
-        <el-dialog title="高级筛选" :close-on-click-modal="false" v-model="dialogFormVisible">
+        <el-dialog title="高级筛选" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
             <el-form :model="form" :label-width="formLabelWidth" label-position="right">
                 <el-form-item label="基本信息">
                     <el-select v-model="form.major" style="width: 200px">

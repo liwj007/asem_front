@@ -2,10 +2,10 @@ import axios from 'axios'
 import store from '../vuex/store'
 import Bus from '../bus'
 
-let base = 'http://127.0.0.1:8080/asem';
-export const uploadFileURL = 'http://127.0.0.1:8080/asem/files/upload'
-// let base = 'http://118.24.171.158:8080/asem';
-// export const uploadFileURL = 'http://118.24.171.158:8080/asem/files/upload'
+// let base = 'http://127.0.0.1:8080/asem';
+// export const uploadFileURL = 'http://127.0.0.1:8080/asem/files/upload'
+let base = 'http://118.24.171.158:8080/asem';
+export const uploadFileURL = 'http://118.24.171.158:8080/asem/files/upload'
 
 
 axios.defaults.withCredentials = true
@@ -216,6 +216,10 @@ export const getAllQuotaApplyList = params => {
 
 export const checkQuotaApply = params => {
     return axios.post(`prizes/check_quota_apply`, querystring.stringify(params)).then(res => res.data);
+};
+
+export const checkSingleQuotaApply = params => {
+    return axios.post(`prizes/check_single_quota_apply`, querystring.stringify(params)).then(res => res.data);
 };
 
 

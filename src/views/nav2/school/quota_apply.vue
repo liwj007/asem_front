@@ -13,7 +13,7 @@
             <!--</el-form>-->
         <!--</el-col>-->
 
-        <el-table :data="tableData"  v-loading="listLoading" stripe  style="width: 100%" @selection-change="selsChange">
+        <el-table :data="tableData" ref="dataTable" v-loading="listLoading" stripe  style="width: 100%" @selection-change="selsChange">
             <el-table-column type="selection" width="55"  :selectable="canSelect">
             </el-table-column>
             <el-table-column type="index" width="70" label="序号">
@@ -184,6 +184,7 @@
                     }).catch((error)=>{});
                 }).catch(() => {
                     this.sels = []
+                    this.$refs.dataTable.clearSelection();
                     this.$message({
                         type: 'info',
                         message: '操作已取消'
@@ -214,6 +215,7 @@
                     }).catch((error)=>{});
                 }).catch(() => {
                     this.sels = []
+                    this.$refs.dataTable.clearSelection();
                     this.$message({
                         type: 'info',
                         message: '操作已取消'
